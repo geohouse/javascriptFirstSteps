@@ -4,3 +4,15 @@
         background-color: #2196F3;
         padding: 10px;
 }
+
+.golCell{
+    background-color: #FF0000;
+}
+
+.alive{
+    background-color: orange; 
+}
+
+.dead{
+    background-color: blue;
+}
