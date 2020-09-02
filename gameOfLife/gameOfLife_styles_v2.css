@@ -1,0 +1,12 @@
+
+.alive{
+background-color: orange;
+width:10px;
+height:10px;
+}
+
+.dead{
+background-color: blue;
+width:10px;
+height:10px;
+}
