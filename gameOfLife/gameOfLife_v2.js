@@ -34,6 +34,9 @@ for(let currRow = 0;  currRow < numRows; currRow++){
     }
 }
 
+
+function nextGeneration() {
+
 let northRow = undefined;
 let southRow = undefined;
 let westCol = undefined;
@@ -121,14 +124,17 @@ for(let currRow = 0;  currRow < numRows; currRow++){
         }
 
         if(document.getElementById("golCell" + currRow + "-" + currCol).className === "alive" && neighborCounter === 2){
-            document.getElementById("golCell" + currRow + "-" + currCol).className == "alive";
+            document.getElementById("golCell" + currRow + "-" + currCol).className = "alive";
             console.log("Kept alive.")
         } else if(document.getElementById("golCell" + currRow + "-" + currCol).className === "dead" && neighborCounter === 3){
-            document.getElementById("golCell" + currRow + "-" + currCol).className == "alive";
+            document.getElementById("golCell" + currRow + "-" + currCol).className = "alive";
             console.log("Made alive!")
         } else{
-            document.getElementById("golCell" + currRow + "-" + currCol).className == "dead";
+            document.getElementById("golCell" + currRow + "-" + currCol).className = "dead";
         }
         
     }
 }
+}
+
+
