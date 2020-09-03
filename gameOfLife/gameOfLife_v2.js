@@ -2,8 +2,8 @@
 
 console.log("Gussy!")
 
-let numRows = 3;
-let numCols = 3;
+let numRows = 30;
+let numCols = 40;
 
 let arrayHolder = [];
 let mainTable = document.createElement('table');
@@ -12,14 +12,6 @@ let createdCell = undefined;
 
 document.body.appendChild(mainTable);
 
-let progressButton = document.createElement('button');
-progressButton.innerHTML = "Click to progress 1 generation."
-document.body.appendChild(progressButton);
-function buttonClick(){
-    console.log("more Gussy!");
-}
-
-progressButton.addEventListener("click", buttonClick);
 
 function createArray(){
 
@@ -162,10 +154,10 @@ function nextGeneration(currArray) {
 
             if(currArray[currRow][currCol] === 1 && neighborCounter === 2){
                 nextArray[currRow][currCol] = 1;
-                console.log("Kept alive.")
-            } else if(currArray[currRow][currCol] === 0 && neighborCounter === 3){
+                console.log("Kept alive.");
+            } else if(neighborCounter === 3){
                 nextArray[currRow][currCol] = 1;
-                console.log("Made alive!")
+                console.log("Alive because of 3 neighbors");
             } else{
                 // The nextArray is initialized to have 0s in all cells, but this makes the 
                 // logic/setting explicit.
@@ -179,24 +171,54 @@ function nextGeneration(currArray) {
 
 }
 
+// This only works because the currentGenArray is in the global environment,
+// so don't need to explicitly pass it into the function or return it from the function.
+function makeNextGenCurrentGen(nextGenArray){
+    for(let currRow = 0;  currRow < numRows; currRow++){
+        for(let currCol = 0; currCol < numCols; currCol++){
+            currentGenArray[currRow][currCol] = nextGenArray[currRow][currCol];
+        }
+    }
+}
+
+function renderNewGen(){
+    for(let currRow = 0;  currRow < numRows; currRow++){
+        for(let currCol = 0; currCol < numCols; currCol++){
+            if(currentGenArray[currRow][currCol] === 1){
+                document.getElementById("golCell" + currRow + "-" + currCol).className = 'alive';
+            } else{
+                document.getElementById("golCell" + currRow + "-" + currCol).className = 'dead';
+            }
+
+        }
+    }
+
+}
+
+
+
 // Initialize the array of array holder to mimic a matrix. Values start as 0 for all cells.
 blankArray = createArray();
 
 // Set up the array with initial 1/0 entries for live/dead that match the shown table state.
-setUpArray = setUpGrid(blankArray);
+currentGenArray = setUpGrid(blankArray);
 
-nextGenArray = nextGeneration(setUpArray);
+// This is the code for each additional iteration that's triggered by pressing the button.
+function nextIteration(){
+    nextGenArray = nextGeneration(currentGenArray);
+    makeNextGenCurrentGen(nextGenArray);
+    renderNewGen();
+}
 
-//makeNextGenerationCurrent(nextGenArray)
 
+// Set up the 'evolution' button
+let progressButton = document.createElement('button');
+progressButton.innerHTML = "Click to progress 1 generation."
+document.body.appendChild(progressButton);
+progressButton.addEventListener("click", nextIteration);
 
-//makeNextGenerationGrid(nextGenArray);
+console.log(currentGenArray);
+console.log(currentGenArray.length);
 
-
-console.log(setUpArray);
-console.log(setUpArray.length);
-
-console.log(nextGenArray);
-console.log(nextGenArray.length);
 
 
