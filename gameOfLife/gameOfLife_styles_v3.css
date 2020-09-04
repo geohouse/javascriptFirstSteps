@@ -1,0 +1,24 @@
+
+.alive{
+    background-color: orange;
+    width:10px;
+    height:10px;
+    }
+    
+.dead{
+background-color: blue;
+width:10px;
+height:10px;
+}
+
+#areaChart{
+    padding:20px;
+    border:30px;
+    margin:40px;
+}
+
+button{
+    width:60px;
+    height:70px;
+}
+    
