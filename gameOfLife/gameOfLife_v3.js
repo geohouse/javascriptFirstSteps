@@ -258,10 +258,60 @@ progressButton.innerHTML = "Click to progress 1 generation."
 document.body.appendChild(progressButton);
 progressButton.addEventListener("click", nextIteration);
 
+var margin = {top: 20, right: 20, bottom: 40, left: 50},
+    width = 575 - margin.left - margin.right,
+    height = 350 - margin.top - margin.bottom;
+
 // create svg element:
-let svg = d3.select("#areaChart").append("svg").attr("width", 600).attr("height", 100)
+let svg = d3.select("#areaChart").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
 let yScale = d3.scaleLinear().range([1, 0]);
 
+
+var data = [
+    { x: 0, y: 10, },
+    { x: 1, y: 15, },
+    { x: 2, y: 35, },
+    { x: 3, y: 20, },
+];
+
+var x = d3.scaleLinear()
+.domain([0, d3.max(data, function(d) { return d.x; })])
+.range([0, width]);
+
+var y = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) { return d.y; })])
+    .range([height, 0]);
+
+var xAxis = d3.axisBottom()
+    .scale(x);
+
+var yAxis = d3.axisLeft()
+    .scale(y);
+
+var area = d3.area()
+.x(function(d) { return x(d.x); })
+.y0(height)
+.y1(function(d) { return y(d.y); });
+
+var svg_v2 = d3.select("svg#area")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg_v2.append("path")
+    .datum(data)
+    .attr("class", "area")
+    .attr("d", area);
+
+svg_v2.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+svg_v2.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
 
 //console.log(currentGenArray);
 //console.log(currentGenArray.length);

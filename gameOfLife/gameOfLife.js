@@ -45,7 +45,12 @@ for(index = 0; index < array.length; index++){
     console.log("Col num is: " + colNum);
 
     
-    if (index2 === 0 && index % 2 === 0){
+    if (index2 === 0 && (index === 0 || index ===3)){
+        // set the class and then the class selector in CSS takes care of setting the color.
+        document.getElementById("golCell" + index).className= 'alive';
+    }
+
+    if (index2 === 2 && (index === 1 || index ===2)){
         // set the class and then the class selector in CSS takes care of setting the color.
         document.getElementById("golCell" + index).className= 'alive';
     }
