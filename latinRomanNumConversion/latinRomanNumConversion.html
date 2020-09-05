@@ -4,15 +4,19 @@
         <meta charset="utf-8">
         <title>Ltn2Rmn</title>
         <script src="latinRomanNumConversion.js" defer></script>
+        <link rel="stylesheet" href="latinRomanNumConversion.css">
     </head>
     <body>
         <h1>Latin-to-Roman and Roman-to-Latin number converter</h1>
         <form>
         <label for="numConverter">Number to convert (either Latin or Roman):</label>
-        <input type="text" id="converter" name="numConverter">
+        <input type="text" id="converter" name="numConverter" autofocus placeholder = "MDLCXVII">
         <!--- The 'latinRomanConvert() function is in the sourced latinRomanNumConversion.js file-->
         <input type="button" value="Convert!" onclick="latinRomanConvert()">
         </form>
+        <div id=outcomeDiv>
+            <p id=outcomePara></p>
+        </div>
 
     </body>
 </html>
