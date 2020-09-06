@@ -2,8 +2,8 @@
 
 console.log("Gussy!")
 
-let numRows = 10;
-let numCols = 10;
+let numRows = 70;
+let numCols = 70;
 
 let arrayHolder = [];
 let mainTable = document.createElement('table');
@@ -223,35 +223,54 @@ let percAlive = 0.0;
 let percAliveTracker = [];
 let curveFunc = undefined;
 
+// The number of miliseconds between animation frames
+let animateInterval = setInterval(nextIteration, 10);
+
+let margin = {top: 20, right: 20, bottom: 40, left: 50};
+let width = 50 - margin.left - margin.right;
+let height = 50 - margin.top - margin.bottom;
+
 // This is the code for each additional iteration that's triggered by pressing the button.
 function nextIteration(){
-    nextGenArray = nextGeneration(currentGenArray);
-    makeNextGenCurrentGen(nextGenArray);
-    renderNewGen();
-    percAlive = calcPercAlive(currentGenArray)
-    numGenerations++;
-    console.log(numGenerations);
-    console.log(percAlive);
-    percAliveTracker.push({x: numGenerations, y: percAlive});
-    console.log(percAliveTracker);
-    // prepare a helper function
-    curveFunc = d3.area()
-    .x(function(d) { return d.x })      // Position of both line breaks on the X axis
-    .y1(function(d) { return d.y })     // Y position of top line breaks
-    .y0(200)                            // Y position of bottom line breaks (200 = bottom of svg area)
 
-    // Add the path using this helper function
-    svg.append('path')
-    .attr('d', curveFunc(percAliveTracker))
-    .attr('stroke', 'black')
-    .attr('fill', 'orange');
+    if(numGenerations === 100 ){
+        clearInterval(animateInterval);
+    } else{
 
-    // add the Y Axis
-    svg.append("g")
-    .call(d3.axisLeft(yScale));
+        nextGenArray = nextGeneration(currentGenArray);
+        makeNextGenCurrentGen(nextGenArray);
+        renderNewGen();
+        percAlive = calcPercAlive(currentGenArray)
+        numGenerations++;
+        console.log(numGenerations);
+        console.log(percAlive);
+        percAliveTracker.push({x: numGenerations, y: percAlive});
+        console.log(percAliveTracker);
+        // prepare a helper function
+        curveFunc = d3.area()
+        .x(function(d) { return d.x })      // Position of both line breaks on the X axis
+        .y1(function(d) { return d.y })     // Y position of top line breaks
+        .y0(10)                            // Y position of bottom line breaks (200 = bottom of svg area)
+
+        // Add the path using this helper function
+        var svg_v2 = d3.select("svg#areaChart")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg_v2.append('path')
+        .attr('d', curveFunc(percAliveTracker))
+        .attr('stroke', 'black')
+        .attr('fill', 'orange');
+
+        // add the Y Axis
+        svg.append("g")
+        .call(d3.axisLeft(yScale));
+    }
 }
 
-
+/*
 // Set up the 'evolution' button
 let progressButton = document.createElement('button');
 progressButton.innerHTML = "Click to progress 1 generation."
@@ -316,5 +335,5 @@ svg_v2.append("g")
 //console.log(currentGenArray);
 //console.log(currentGenArray.length);
 
-
+*/
 
