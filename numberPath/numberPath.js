@@ -66,7 +66,7 @@ function setUpGrid(){
 
 // Find the way through the grid and highlight the cells as it goes in a different color
 
-function highlightNextCell(){
+function highlightPath(){
     /*
     if(pathNum === (numRows * numCols)){
         clearInterval(animateInterval);
@@ -146,24 +146,23 @@ function highlightNextCell(){
             }
         }
     }
-    window.requestAnimationFrame(highlightNextCell)
+    window.requestAnimationFrame(highlightPath)
 
 }
 
-function highlightPath(){
-    let lastMarkedValue = 0;
-    let lastVisitedCoords = [0,0];
-    let currVisitedCoords = [0,0];
-    let currEntry = 0;
-    let pathNum = 1;
+setUpGrid();
+
+//function highlightPath(){
+let lastMarkedValue = 0;
+let lastVisitedCoords = [0,0];
+let currVisitedCoords = [0,0];
+let currEntry = 0;
+let pathNum = 1;
 
     //for(let pathNum = 1; pathNum <= (numRows * numCols); pathNum ++){
     //for(let pathNum = 1; pathNum <= 15; pathNum ++){    
         // If needing to find the start point for the first number in the array
     //let animateInterval = setInterval(highlightNextCell, 10);
         //highlightNextCell(pathNum);
-    window.requestAnimationFrame(highlightNextCell);
-    }
+window.requestAnimationFrame(highlightPath);
 
-setUpGrid();
-highlightPath();
