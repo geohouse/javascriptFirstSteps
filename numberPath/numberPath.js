@@ -146,7 +146,10 @@ function highlightPath(){
             }
         }
     }
-    window.requestAnimationFrame(highlightPath)
+
+    if(pathNum <= (numRows * numCols)){
+        window.requestAnimationFrame(highlightPath)
+    }
 
 }
 
@@ -164,5 +167,7 @@ let pathNum = 1;
         // If needing to find the start point for the first number in the array
     //let animateInterval = setInterval(highlightNextCell, 10);
         //highlightNextCell(pathNum);
+// The function highlightPath CAN see/set all global vars defined above.
+// This IS NOT the case if these vars are defined in a function that calls another function (with the animation call) instead.
 window.requestAnimationFrame(highlightPath);
 
