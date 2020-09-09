@@ -97,14 +97,14 @@ function highlightPath(){
 
         // Check North if not the first row
         if(lastVisitedCoords[0] > 0){
-            console.log("In N check");
+            //console.log("In N check");
             if(rowHolder[lastVisitedCoords[0] - 1][lastVisitedCoords[1]] === pathNum){
                 console.log("in if.")
                 currVisitedCoords = [lastVisitedCoords[0] - 1, lastVisitedCoords[1]]
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
-                
+                console.log("Going to the North cell.");
                 // If this is being run manually, then return to prevent 
                 // double moves. Else if running automatically, let it 
                 // continue
@@ -116,14 +116,14 @@ function highlightPath(){
 
         // Check South if not the last row
         if(lastVisitedCoords[0] < numRows - 1){
-            console.log("In S check");
+            //console.log("In S check");
             if(rowHolder[lastVisitedCoords[0] + 1][lastVisitedCoords[1]] === pathNum){
                 console.log("in if.")
                 currVisitedCoords = [lastVisitedCoords[0] + 1, lastVisitedCoords[1]]
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
-
+                console.log("Going to the South cell.");
                 // If this is being run manually, then return to prevent 
                 // double moves. Else if running automatically, let it 
                 // continue
@@ -135,13 +135,14 @@ function highlightPath(){
 
         // Check West if not the first col
         if(lastVisitedCoords[1] > 0){
-            console.log("In W check");
+            //console.log("In W check");
             if(rowHolder[lastVisitedCoords[0]][lastVisitedCoords[1] - 1] === pathNum){
                 console.log("in if.")
                 currVisitedCoords = [lastVisitedCoords[0], lastVisitedCoords[1] - 1]
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
+                console.log("Going to the West cell.");
                 // If this is being run manually, then return to prevent 
                 // double moves. Else if running automatically, let it 
                 // continue
@@ -153,16 +154,17 @@ function highlightPath(){
 
         // Check East if not the last col
         if(lastVisitedCoords[1] < numCols - 1){
-            console.log("In E check");
+            //console.log("In E check");
             //console.log(lastVisitedCoords[0]);
             //console.log(lastVisitedCoords[1] + 1);
             //console.log(rowHolder[5][4]);
             if(rowHolder[lastVisitedCoords[0]][lastVisitedCoords[1] + 1] === pathNum){
-                console.log("in if.")
+                //console.log("in if.")
                 currVisitedCoords = [lastVisitedCoords[0], lastVisitedCoords[1] + 1]
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
+                console.log("Going to the East cell.");
                 // If this is being run manually, then return to prevent 
                 // double moves. Else if running automatically, let it 
                 // continue

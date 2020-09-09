@@ -2,8 +2,8 @@
 
 console.log("Gussy!")
 
-let numRows = 70;
-let numCols = 70;
+let numRows = 30;
+let numCols = 30;
 
 let arrayHolder = [];
 let mainTable = document.createElement('table');
