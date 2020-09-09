@@ -46,12 +46,12 @@ console.log(rowHolder[0][3]);
 // each desired column. Set the ID of each table cell to be the <rowNum>-<colNum> (0-based)
 function setUpGrid(){
     for(let currRow = 0;  currRow < numRows; currRow++){
-        console.log("Curr row is: " + currRow);
+        //console.log("Curr row is: " + currRow);
         tableRow = document.createElement('tr');
         mainTable.appendChild(tableRow);
         
         for(let currCol = 0; currCol < numCols; currCol++){
-            console.log("Curr col is: " + currCol);
+            //console.log("Curr col is: " + currCol);
             createdCell = document.createElement('td');
             createdCell.id = currRow + "-" + currCol;
             // Add the path order number to the cell
@@ -75,11 +75,11 @@ function highlightPath(){
     console.log("Path num is: " + pathNum);
     if(pathNum === 1){
         for(let currRow = 0;  currRow < numRows; currRow++){
-            console.log("Curr row is: " + currRow);
+            //console.log("Curr row is: " + currRow);
             for(let currCol = 0; currCol < numCols; currCol++){
-                console.log("Curr col is: " + currCol)
+                //console.log("Curr col is: " + currCol)
                 currEntry = rowHolder[currRow][currCol]
-                if(currEntry === pathNum){
+                if(currEntry === 1){
                     currVisitedCoords = [currRow, currCol];
                     document.getElementById(currRow + "-" + currCol).className = "chosen-path";
                     lastVisitedCoords = currVisitedCoords;
@@ -89,7 +89,7 @@ function highlightPath(){
         }
     } else{
         console.log("In else.");
-        console.log(pathNum);
+        console.log("Path num in else is: " + pathNum);
         console.log(lastVisitedCoords[0]);
         console.log(lastVisitedCoords[1]);
         // Check the 4 possible directions around the last cell to find
@@ -104,6 +104,13 @@ function highlightPath(){
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
+                
+                // If this is being run manually, then return to prevent 
+                // double moves. Else if running automatically, let it 
+                // continue
+                if(!isToggled){
+                    return;
+                }
             }
         }
 
@@ -116,6 +123,13 @@ function highlightPath(){
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
+
+                // If this is being run manually, then return to prevent 
+                // double moves. Else if running automatically, let it 
+                // continue
+                if(!isToggled){
+                    return;
+                }
             }
         }
 
@@ -128,6 +142,12 @@ function highlightPath(){
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
+                // If this is being run manually, then return to prevent 
+                // double moves. Else if running automatically, let it 
+                // continue
+                if(!isToggled){
+                    return;
+                }
             }
         }
 
@@ -143,22 +163,27 @@ function highlightPath(){
                 document.getElementById(currVisitedCoords[0] + "-" + currVisitedCoords[1]).className = "chosen-path";
                 lastVisitedCoords = currVisitedCoords;
                 pathNum++;
+                // If this is being run manually, then return to prevent 
+                // double moves. Else if running automatically, let it 
+                // continue
+                if(!isToggled){
+                    return;
+                }
             }
         }
     }
-
-    if(pathNum <= (numRows * numCols)){
+    
+    if(isToggled === true && pathNum <= (numRows * numCols)){
         window.requestAnimationFrame(highlightPath)
-    }
-
+    } 
 }
 
 setUpGrid();
 
 //function highlightPath(){
 let lastMarkedValue = 0;
-let lastVisitedCoords = [0,0];
-let currVisitedCoords = [0,0];
+let lastVisitedCoords = [0][0];
+let currVisitedCoords = [0][0];
 let currEntry = 0;
 let pathNum = 1;
 
@@ -169,5 +194,24 @@ let pathNum = 1;
         //highlightNextCell(pathNum);
 // The function highlightPath CAN see/set all global vars defined above.
 // This IS NOT the case if these vars are defined in a function that calls another function (with the animation call) instead.
-window.requestAnimationFrame(highlightPath);
+
+let isToggled = undefined;
+
+function queryCheckStatus(){
+    isToggled = toggle.checked;
+    console.log("isToggled is: " + isToggled);
+    // Turn on the auto-animation if toggled, otherwise move manually when the 
+    // button is pushed
+    if(isToggled){
+        window.requestAnimationFrame(highlightPath);
+    } 
+}
+
+let toggle = document.getElementById("toggle");
+toggle.addEventListener("click", queryCheckStatus);
+
+let nextButton = document.getElementById("forward-button");
+nextButton.addEventListener("click", highlightPath); 
+
+
 
