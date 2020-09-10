@@ -35,15 +35,20 @@ setUpGrid();
 
 let lastRow = 0;
 let lastCol = 0;
+// Number of the current cell to fill
 let currNum = 1;
-let neighborCount = 0;
-let northOK = 0;
-let southOK = 0;
-let westOK = 0;
-let eastOK = 0;
+let dirSelector = [];
+let selectedDir = "";
+
+// Number of full random solves done
 let iterCount = 0;
 
 function makeMove(){
+
+    dirSelector = [];
+    selectedDir = "";
+
+    console.log(currNum);
 
     if(currNum === 1){
         let pickRow = Math.floor(Math.random() * numRows);
@@ -52,25 +57,87 @@ function makeMove(){
         document.getElementById(pickRow + "-" + pickCol).innerHTML = currNum;
         lastRow = pickRow;
         lastCol = pickCol;
+        currNum++;
+        return;
     } else{
+
+        console.log(lastRow);
+        console.log(lastCol);
+
         //North check
-
+        if(lastRow > 0 && document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML === ""){
+            dirSelector.push("N");
+            console.log("North OK.")
+        }
         //South check
-
+        if(lastRow < numRows - 1 && document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML === ""){
+            dirSelector.push("S");
+            console.log("South OK.")
+        }
         //West check
-
+        // Need parenths around the lastCol addition/subtraction for it to evaluate correctly.
+        if(lastCol > 0 && document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML === ""){
+            dirSelector.push("W");
+            console.log("West OK.")
+        }
         //East check
+        if(lastCol < numCols - 1 && document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML === ""){
+            dirSelector.push("E");
+            console.log("East OK.") 
+        }
+
+        // Randomly select one of the directions represented in the dirSelector.
+        // This makes sure each possible direction gets the same probability 
+        // of selection regardless of the length of the dirSelector array.
+        selectedDir = dirSelector[Math.floor(Math.random() * dirSelector.length)];
+        console.log("Selected dir is: " + selectedDir);
+
+        if(selectedDir === "N"){
+            document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML = currNum;
+            currNum++;
+            lastRow = lastRow - 1;
+            return;
+        }
+
+        if(selectedDir === "S"){
+            document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML = currNum;
+            currNum++;
+            lastRow = lastRow + 1;
+            return;
+        }
+
+        if(selectedDir === "W"){
+            document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML = currNum;
+            currNum++;
+            lastCol = lastCol - 1;
+            return;
+        }
+
+        if(selectedDir === "E"){
+            document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML = currNum;
+            currNum++;
+            lastCol = lastCol + 1;
+            return;
+        }
+
+        
+
+
     }
 
 }
 
 
+let nextButton = document.getElementById("forward-button");
+nextButton.addEventListener("click", makeMove); 
+
+/*
 for(currNum = 1; currNum <= (numRows * numCols); currNum++){
 
     makeMove();
-
+    console.log(currNum);
 }
-
+*/
  
 
 /*
