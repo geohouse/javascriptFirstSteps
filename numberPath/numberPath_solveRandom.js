@@ -33,128 +33,103 @@ function setUpGrid(){
 
 setUpGrid();
 
-function clearGrid(){
-    for(let currRow = 0;  currRow < numRows; currRow++){
-        for(let currCol = 0; currCol < numCols; currCol++){
-            document.getElementById(currRow + "-" + currCol).innerHTML = "";
-            createdCell.className = 'empty-cell';
-        }
-    }
-}
-
 let lastRow = 0;
 let lastCol = 0;
 // Number of the current cell to fill
 let currNum = 1;
-let endNum = 0;
 let dirSelector = [];
 let selectedDir = "";
 
-// Number of full random solves to be done
-let iterCount = 200;
-let numMoveHolder = [];
+// Number of full random solves done
+let iterCount = 0;
 
-function makeMoves(){
+function makeMove(){
 
-    while(currNum <= (numRows * numCols)){
-        dirSelector = [];
-        selectedDir = "";
+    dirSelector = [];
+    selectedDir = "";
 
-        console.log("currNum is: " + currNum);
-        if(currNum === 1){
-            let pickRow = Math.floor(Math.random() * numRows);
-            let pickCol = Math.floor(Math.random() * numCols);
-            console.log("The picked cell is: " + pickRow + "," + pickCol);
-            document.getElementById(pickRow + "-" + pickCol).innerHTML = currNum;
-            lastRow = pickRow;
-            lastCol = pickCol;
-            currNum++;
-            //return;
-        } else{
+    console.log(currNum);
 
-            console.log(lastRow);
-            console.log(lastCol);
+    if(currNum === 1){
+        let pickRow = Math.floor(Math.random() * numRows);
+        let pickCol = Math.floor(Math.random() * numCols);
+        console.log("The picked cell is: " + pickRow + "," + pickCol);
+        document.getElementById(pickRow + "-" + pickCol).innerHTML = currNum;
+        lastRow = pickRow;
+        lastCol = pickCol;
+        currNum++;
+        return;
+    } else{
 
-            //North check
-            if(lastRow > 0 && document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML === ""){
-                dirSelector.push("N");
-                console.log("North OK.")
-            }
-            //South check
-            if(lastRow < numRows - 1 && document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML === ""){
-                dirSelector.push("S");
-                console.log("South OK.")
-            }
-            //West check
-            // Need parenths around the lastCol addition/subtraction for it to evaluate correctly.
-            if(lastCol > 0 && document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML === ""){
-                dirSelector.push("W");
-                console.log("West OK.")
-            }
-            //East check
-            if(lastCol < numCols - 1 && document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML === ""){
-                dirSelector.push("E");
-                console.log("East OK.") 
-            }
+        console.log(lastRow);
+        console.log(lastCol);
 
-            // Randomly select one of the directions represented in the dirSelector.
-            // This makes sure each possible direction gets the same probability 
-            // of selection regardless of the length of the dirSelector array.
-            selectedDir = dirSelector[Math.floor(Math.random() * dirSelector.length)];
-            console.log("Selected dir is: " + selectedDir);
-
-            if(selectedDir === "N"){
-                document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML = currNum;
-                currNum++;
-                lastRow = lastRow - 1;
-                //return;
-            }
-
-            if(selectedDir === "S"){
-                document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML = currNum;
-                currNum++;
-                lastRow = lastRow + 1;
-                //return;
-            }
-
-            if(selectedDir === "W"){
-                document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML = currNum;
-                currNum++;
-                lastCol = lastCol - 1;
-                //return;
-            }
-
-            if(selectedDir === "E"){
-                document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML = currNum;
-                currNum++;
-                lastCol = lastCol + 1;
-                //return;
-            }
-
-            // This is the case when there are no more possible moves.
-            // The last move was the currNum (where there's no move) - 1
-            if(selectedDir === undefined){
-                return(currNum - 1);
-            }
+        //North check
+        if(lastRow > 0 && document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML === ""){
+            dirSelector.push("N");
+            console.log("North OK.")
         }
+        //South check
+        if(lastRow < numRows - 1 && document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML === ""){
+            dirSelector.push("S");
+            console.log("South OK.")
+        }
+        //West check
+        // Need parenths around the lastCol addition/subtraction for it to evaluate correctly.
+        if(lastCol > 0 && document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML === ""){
+            dirSelector.push("W");
+            console.log("West OK.")
+        }
+        //East check
+        if(lastCol < numCols - 1 && document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML === ""){
+            dirSelector.push("E");
+            console.log("East OK.") 
+        }
+
+        // Randomly select one of the directions represented in the dirSelector.
+        // This makes sure each possible direction gets the same probability 
+        // of selection regardless of the length of the dirSelector array.
+        selectedDir = dirSelector[Math.floor(Math.random() * dirSelector.length)];
+        console.log("Selected dir is: " + selectedDir);
+
+        if(selectedDir === "N"){
+            document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML = currNum;
+            currNum++;
+            lastRow = lastRow - 1;
+            return;
+        }
+
+        if(selectedDir === "S"){
+            document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML = currNum;
+            currNum++;
+            lastRow = lastRow + 1;
+            return;
+        }
+
+        if(selectedDir === "W"){
+            document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML = currNum;
+            currNum++;
+            lastCol = lastCol - 1;
+            return;
+        }
+
+        if(selectedDir === "E"){
+            document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML = currNum;
+            currNum++;
+            lastCol = lastCol + 1;
+            return;
+        }
+
+        
 
 
     }
 
 }
 
-for(let iter = 0; iter < iterCount; iter ++){
-    currNum = 1;
-    clearGrid();
-    endNum = makeMoves();
-    numMoveHolder.push(endNum);
-    
 
-}
-
-
-//let nextButton = document.getElementById("forward-button");
-//nextButton.addEventListener("click", makeMove); 
+let nextButton = document.getElementById("forward-button");
+nextButton.addEventListener("click", makeMove); 
 
 /*
 for(currNum = 1; currNum <= (numRows * numCols); currNum++){
