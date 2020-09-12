@@ -215,19 +215,28 @@ function makeMove(){
         // otherwise will only be the entries that have moves possible
         // (matches the entries in the dirSelector array)
 
-        function removeBlankDists(){
-            for(let i = 0; i < Object.keys(distHolder).length; i++){
+        function removeBlankDists(distHolder){
+            
+            // Because this for loop deletes values from the object it's looping through,
+            // and does that by index, need to loop through in reverse order to 
+            // delete reliably using original index values
+            for(let i = Object.keys(distHolder).length - 1; i > -1; i--){
                 // If there's still the default -1 value in the object for the 
                 // currently looped index (direction), then remove  that
                 // direction from the distHolder
+                console.log("in remove blank dists");
+                console.log("length is: " + Object.keys(distHolder).length);
+                console.log("i is: " + i);
+                console.log("key is: " + Object.keys(distHolder)[i]);
                 if(Object.values(distHolder)[i] === -1) {
+                    console.log("Removing key: " + Object.keys(distHolder)[i]);
                     delete distHolder[Object.keys(distHolder)[i]];
                 }
             }
             return distHolder;
         }
 
-        distHolder = removeBlankDists();
+        distHolder = removeBlankDists(distHolder);
 
         console.log("The distHolder keys are: " + Object.keys(distHolder));
         console.log("The distHolder values are: " + Object.values(distHolder));
