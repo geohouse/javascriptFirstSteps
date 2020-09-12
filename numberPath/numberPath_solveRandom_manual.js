@@ -132,7 +132,11 @@ let selectedDir = "";
 
 // This will be an array to hold the distances 
 let distHolder = [];
+let distLabelHolder = ["N","S","W","E"];
 let currDist = 0;
+
+let matchedIndices = [];
+let matchedDirections = [];
 
 // Number of full random solves done
 let iterCount = 0;
@@ -168,10 +172,7 @@ function makeMove(){
             console.log("currDist N is: " + currDist);
             distHolder.push(currDist);
             
-        } else{
-            // else there is no room to the North and enter 0 instead.
-            distHolder.push(0)
-        }
+        } 
 
         //South check
         if(lastRow < numRows - 1 && document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML === ""){
@@ -180,9 +181,6 @@ function makeMove(){
             currDist = getDistance("S", lastRow, lastCol);
             console.log("currDist S is: " + currDist);
             distHolder.push(currDist);
-        }else{
-            // else there is no room to the South and enter 0 instead.
-            distHolder.push(0)
         }
 
         //West check
@@ -193,10 +191,7 @@ function makeMove(){
             currDist = getDistance("W", lastRow, lastCol);
             console.log("currDist W is: " + currDist);
             distHolder.push(currDist);
-        } else{
-            // else there is no room to the West and enter 0 instead.
-            distHolder.push(0)
-        }
+        } 
 
 
         //East check
@@ -206,18 +201,63 @@ function makeMove(){
             currDist = getDistance("E", lastRow, lastCol);
             console.log("currDist E is: " + currDist); 
             distHolder.push(currDist);
-        }else{
-            // else there is no room to the East and enter 0 instead.
-            distHolder.push(0)
-        }
+        } 
 
         // The dist holder is an array with the 4 current distances:
-        // N, S, W, E
+        // N, S, W, E if all 4 are present as possibilities,
+        // otherwise will only be the entries that have moves possible
+        // (matches the entries in the dirSelector array)
         console.log("The distHolder is: " + distHolder);
+
+        let valueToMatch = undefined;
+
+        // Returns the indexes of the distHolder that meet the valueToMatch criteria.
+        function which(valueToMatch){
+            let indices = [];
+            for(let i = 0; i < distHolder.length; i++){
+                if(distHolder[i] === valueToMatch){
+                    indices.push(i);
+                }
+            }
+            return(indices);
+        }
+
+        // Use the matchedIndices as a lookup in the distLabelHolder
+        // to get the move directions that match the search criteria
+        function getMatchedDirections(){
+            let matchedDirs = [];
+            let indexVal = undefined;
+            for(let i = 0; i < matchedIndices.length; i++){
+                indexVal = matchedIndices[i];
+                matchedDirs.push(dirSelector[indexVal]);
+            }
+            return matchedDirs;
+        }
+
+        // Find any distances that are 1, and go in that direction. If more than one direction === 1,
+        // then pick randomly between them.
+
+        matchedIndices = which(1);
+        
+        if(matchedIndices.length > 0){
+            console.log("Matched indices 1 is: " + matchedIndices);
+        } else{
+            matchedIndices = which(2);
+            if(matchedIndices.length > 0){
+                console.log("Matched indices 2 is: " + matchedIndices);
+            }
+        }
+        
+        
+
+        matchedDirections = getMatchedDirections();
+        console.log("Matched directions are: " + matchedDirections);
+
 
         // Randomly select one of the directions represented in the dirSelector.
         // This makes sure each possible direction gets the same probability 
         // of selection regardless of the length of the dirSelector array.
+        console.log("The dir selector is: " + dirSelector);
         selectedDir = dirSelector[Math.floor(Math.random() * dirSelector.length)];
         console.log("Selected dir is: " + selectedDir);
 
