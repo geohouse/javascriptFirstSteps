@@ -33,6 +33,21 @@ function setUpGrid(){
 
 setUpGrid();
 
+// This is an array of arrays that will emulate the grid and will allow 
+// reporting of any finished grids
+
+let tableArray = [];
+
+function setUpArray(){
+    tableArray = [];
+    for(let row = 0; row< numRows; row ++){
+        tableArray.push(Array(numCols));
+    }
+    return tableArray;
+}
+
+setUpArray();
+
 let direction = undefined;
 let distRow = undefined;
 let distCol = undefined;
@@ -143,7 +158,7 @@ let currDist = 0;
 
 let matchedIndices = [];
 let matchedDirections = [];
-let directionWeights
+let directionWeights = [];
 
 // Number of full random solves done
 let iterCount = 0;
@@ -162,6 +177,7 @@ function makeMove(){
         let pickCol = Math.floor(Math.random() * numCols);
         console.log("The picked cell is: " + pickRow + "," + pickCol);
         document.getElementById(pickRow + "-" + pickCol).innerHTML = currNum;
+        tableArray[pickRow][pickCol] = currNum;
         lastRow = pickRow;
         lastCol = pickCol;
         currNum++;
@@ -236,6 +252,8 @@ function makeMove(){
             return distHolder;
         }
 
+        // Clean up the distHolder Object to remove any entries with -1 (default)
+        // entries, and therefore no distance to travel in that/those direction(s).
         distHolder = removeBlankDists(distHolder);
 
         console.log("The distHolder keys are: " + Object.keys(distHolder));
@@ -293,9 +311,10 @@ function makeMove(){
         console.log("The dir selector is: " + dirSelector);
         selectedDir = dirSelector[Math.floor(Math.random() * dirSelector.length)];
         console.log("Selected dir is: " + selectedDir);
-
+        console.log(tableArray);
         if(selectedDir === "N"){
             document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML = currNum;
+            tableArray[lastRow - 1][lastCol] = currNum;
             currNum++;
             lastRow = lastRow - 1;
             return;
@@ -303,6 +322,7 @@ function makeMove(){
 
         if(selectedDir === "S"){
             document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML = currNum;
+            tableArray[lastRow + 1][lastCol] = currNum;
             currNum++;
             lastRow = lastRow + 1;
             return;
@@ -310,6 +330,7 @@ function makeMove(){
 
         if(selectedDir === "W"){
             document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML = currNum;
+            tableArray[lastRow][lastCol - 1] = currNum;
             currNum++;
             lastCol = lastCol - 1;
             return;
@@ -317,14 +338,12 @@ function makeMove(){
 
         if(selectedDir === "E"){
             document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML = currNum;
+            tableArray[lastRow][lastCol + 1] = currNum;
             currNum++;
             lastCol = lastCol + 1;
             return;
         }
-
         
-
-
     }
 
 }
