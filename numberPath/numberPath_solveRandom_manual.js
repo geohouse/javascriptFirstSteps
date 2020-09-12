@@ -48,7 +48,7 @@ function getDistance(direction, distRow , distCol){
 
     if(direction === "N"){
         while(distRow > 0){
-            console.log("In while");
+            console.log("In N while");
             if(document.getElementById(distRow - 1 + "-" + distCol).innerHTML === ""){
                 console.log("Incrementing N dist");
                 dist ++;
@@ -91,7 +91,7 @@ function getDistance(direction, distRow , distCol){
                 dist ++;
                 distCol = distCol - 1;
 
-            } else if(document.getElementById(dist + "-" + (distCol - 1)).innerHTML != ""){
+            } else if(document.getElementById(distRow + "-" + (distCol - 1)).innerHTML != ""){
                 // Return as soon as hit an element that's filled (i.e. don't skip over filled 
                 // elements and then keep counting dist with any non-filled elements until running 
                 // out of elements to tabulate)
@@ -109,7 +109,7 @@ function getDistance(direction, distRow , distCol){
                 dist ++;
                 distCol = distCol + 1;
 
-            } else if(document.getElementById(dist + "-" + (distCol + 1)).innerHTML != ""){
+            } else if(document.getElementById(distRow + "-" + (distCol + 1)).innerHTML != ""){
                 // Return as soon as hit an element that's filled (i.e. don't skip over filled 
                 // elements and then keep counting dist with any non-filled elements until running 
                 // out of elements to tabulate)
@@ -121,9 +121,6 @@ function getDistance(direction, distRow , distCol){
 
     return dist;
 }
-
-let distTest = getDistance(direction = "N", distRow = 4, distCol = 3);
-console.log("distTest is: " + distTest);
 
 
 let lastRow = 0;
@@ -169,15 +166,25 @@ function makeMove(){
             console.log("North OK.");
             currDist = getDistance("N", lastRow, lastCol);
             console.log("currDist N is: " + currDist);
+            distHolder.push(currDist);
             
+        } else{
+            // else there is no room to the North and enter 0 instead.
+            distHolder.push(0)
         }
+
         //South check
         if(lastRow < numRows - 1 && document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML === ""){
             dirSelector.push("S");
             console.log("South OK.");
             currDist = getDistance("S", lastRow, lastCol);
             console.log("currDist S is: " + currDist);
+            distHolder.push(currDist);
+        }else{
+            // else there is no room to the South and enter 0 instead.
+            distHolder.push(0)
         }
+
         //West check
         // Need parenths around the lastCol addition/subtraction for it to evaluate correctly.
         if(lastCol > 0 && document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML === ""){
@@ -185,14 +192,28 @@ function makeMove(){
             console.log("West OK.");
             currDist = getDistance("W", lastRow, lastCol);
             console.log("currDist W is: " + currDist);
+            distHolder.push(currDist);
+        } else{
+            // else there is no room to the West and enter 0 instead.
+            distHolder.push(0)
         }
+
+
         //East check
         if(lastCol < numCols - 1 && document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML === ""){
             dirSelector.push("E");
             console.log("East OK.");
             currDist = getDistance("E", lastRow, lastCol);
             console.log("currDist E is: " + currDist); 
+            distHolder.push(currDist);
+        }else{
+            // else there is no room to the East and enter 0 instead.
+            distHolder.push(0)
         }
+
+        // The dist holder is an array with the 4 current distances:
+        // N, S, W, E
+        console.log("The distHolder is: " + distHolder);
 
         // Randomly select one of the directions represented in the dirSelector.
         // This makes sure each possible direction gets the same probability 
