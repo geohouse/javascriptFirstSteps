@@ -145,12 +145,11 @@ let currNum = 1;
 let dirSelector = [];
 let selectedDir = "";
 
-// This will be an array to hold the distances 
-let distHolder = {};
-//let distLabelHolder = ["N","S","W","E"];
+// This will be a nested array to hold the distances e.g. [['N',8], ['S':2]]
+let distHolder = [];
 
 function initializeDistHolder(){
-    distHolder = {'N':-1, 'S':-1, 'W':-1, 'E': -1};
+    distHolder = [['N',-1], ['S',-1], ['W',-1], ['E', -1]];
     return distHolder;
 }
 
@@ -159,6 +158,9 @@ let currDist = 0;
 let matchedIndices = [];
 let matchedDirections = [];
 let directionWeights = [];
+// The probability of visiting any cell that is distance 1 away ( x however many)
+// directions have a distance of 1. (all other cells have probability of 1-dist1Weight)
+let dist1Weight = 0.9;
 
 // Number of full random solves done
 let iterCount = 0;
@@ -189,64 +191,66 @@ function makeMove(){
 
         //North check
         if(lastRow > 0 && document.getElementById(lastRow - 1 + "-" + lastCol).innerHTML === ""){
-            dirSelector.push("N");
+            //dirSelector.push("N");
             console.log("North OK.");
             currDist = getDistance("N", lastRow, lastCol);
             console.log("currDist N is: " + currDist);
-            distHolder['N'] = currDist;
+            distHolder[0][0] = "N"
+            distHolder[0][1] = currDist;
+
             
         } 
 
         //South check
         if(lastRow < numRows - 1 && document.getElementById(lastRow + 1 + "-" + lastCol).innerHTML === ""){
-            dirSelector.push("S");
+            //dirSelector.push("S");
             console.log("South OK.");
             currDist = getDistance("S", lastRow, lastCol);
             console.log("currDist S is: " + currDist);
-            distHolder['S'] = currDist;
+            //distHolder[1] is for S
+            distHolder[1][0] = "S"
+            distHolder[1][1] = currDist;
         }
 
         //West check
         // Need parenths around the lastCol addition/subtraction for it to evaluate correctly.
         if(lastCol > 0 && document.getElementById(lastRow + "-" + (lastCol - 1)).innerHTML === ""){
-            dirSelector.push("W");
+            //dirSelector.push("W");
             console.log("West OK.");
             currDist = getDistance("W", lastRow, lastCol);
             console.log("currDist W is: " + currDist);
-            distHolder['W'] = currDist;
+            distHolder[2][0] = "W";
+            distHolder[2][1] = currDist;
         } 
 
 
         //East check
         if(lastCol < numCols - 1 && document.getElementById(lastRow + "-" + (lastCol + 1)).innerHTML === ""){
-            dirSelector.push("E");
+            //dirSelector.push("E");
             console.log("East OK.");
             currDist = getDistance("E", lastRow, lastCol);
             console.log("currDist E is: " + currDist); 
-            distHolder['E'] = currDist;
+            distHolder[3][0] = "E";
+            distHolder[3][1] = currDist;
         } 
-
-        // The dist holder is an array with the 4 current distances:
-        // N, S, W, E if all 4 are present as possibilities,
-        // otherwise will only be the entries that have moves possible
-        // (matches the entries in the dirSelector array)
 
         function removeBlankDists(distHolder){
             
-            // Because this for loop deletes values from the object it's looping through,
+            // Because this for loop deletes values from the array it's looping through,
             // and does that by index, need to loop through in reverse order to 
             // delete reliably using original index values
-            for(let i = Object.keys(distHolder).length - 1; i > -1; i--){
+            for(let i = distHolder.length - 1; i > -1; i--){
                 // If there's still the default -1 value in the object for the 
                 // currently looped index (direction), then remove  that
                 // direction from the distHolder
                 console.log("in remove blank dists");
-                console.log("length is: " + Object.keys(distHolder).length);
-                console.log("i is: " + i);
-                console.log("key is: " + Object.keys(distHolder)[i]);
-                if(Object.values(distHolder)[i] === -1) {
-                    console.log("Removing key: " + Object.keys(distHolder)[i]);
-                    delete distHolder[Object.keys(distHolder)[i]];
+                //console.log("length is: " + Object.keys(distHolder).length);
+                //console.log("i is: " + i);
+                console.log("key is: " + distHolder[i][0]);
+                if(distHolder[i][1] === -1) {
+                    console.log("Removing key: " + distHolder[i][0]);
+                    // Remove 1 element at index i
+                    distHolder.splice(i,1);
                 }
             }
             return distHolder;
@@ -258,27 +262,40 @@ function makeMove(){
 
         console.log("The distHolder keys are: " + Object.keys(distHolder));
         console.log("The distHolder values are: " + Object.values(distHolder));
-        let valueToMatch = undefined;
-
+        
         // Returns the indexes of the distHolder that meet the valueToMatch criteria.
+        /*
         function which(valueToMatch){
             let indices = [];
-            for(let i = 0; i < Object.keys(distHolder).length; i++){
+            for(let i = 0; i < distHolder.length; i++){
                 if(Object.values(distHolder)[i] === valueToMatch){
                     indices.push(i);
                 }
             }
             return(indices);
         }
+        
+        */
 
-        // Use the matchedIndices as a lookup in the distLabelHolder
-        // to get the move directions that match the search criteria
-        function getMatchedDirections(){
+        // Get the directions that have a distance matching the valueToMatch input
+        function getMatchedDirections(valueToMatch){
             let matchedDirs = [];
             let indexVal = undefined;
-            for(let i = 0; i < matchedIndices.length; i++){
+            let currentKey = "";
+            for(let i = 0; i < distHolder.length; i++){
+                
+                if(distHolder[i][1] === valueToMatch){
+
+                    matchedDirs.push(distHolder[i][0]);
+                }
+                /*
                 indexVal = matchedIndices[i];
-                matchedDirs.push(dirSelector[indexVal]);
+                for(let j = 0; j< Object.keys(distHolder).length; j++){
+                    currentKey = Object.keys(distHolder)[j];
+                    if(current)
+                }
+                */
+                
             }
             return matchedDirs;
         }
@@ -289,27 +306,58 @@ function makeMove(){
         // Find any distances that are 1, and go in that direction. If more than one direction === 1,
         // then pick randomly between them.
 
-        matchedIndices = which(1);
+        //console.log("The dir selector is: " + dirSelector);
+        
+        
+
+        function inMatchedDirections(input){
+            let match = false;
+            for (let i = 0; i < matchedDirections.length; i++){
+                if(matchedDirections[i] === input){
+                    match = true;
+                }
+            }
+            return match;
+        }
+
+        //matchedIndices = which(1);
+        matchedDirections = getMatchedDirections(1);
+        console.log("Matched directions 1 are: " + matchedDirections);
+
         if(matchedIndices.length > 0){
             console.log("Matched indices 1 is: " + matchedIndices);
+
+            for(let i = 0; i< distHolder.length; i++){
+                // if the iterated direction of distHolder is in
+                // the matched directions, then add the higher weight to the 
+                // direction. Otherwise add 1-higher weight. 
+                if(inMatchedDirections(distHolder[i][0])){
+                    directionWeights[i] = [distHolder[i][0], dist1Weight]; 
+                } else{
+                    directionWeights[i] = [distHolder[i][0], 1 - dist1Weight];
+                }
+            }
+            
+            console.log("The direction weights are: " + directionWeights);
+            //console.log("The weight keys are: " + Object.keys(directionWeights));
+            //console.log("The weight values are: " + Object.values(directionWeights));
+
         } else{
-            matchedIndices = which(2);
-            if(matchedIndices.length > 0){
-                console.log("Matched indices 2 is: " + matchedIndices);
+            matchedDirections = getMatchedDirections(2);
+            if(matchedDirections.length > 0){
+                console.log("Matched directions 2 is: " + matchedDirections);
             }
         }
         
         
 
-        matchedDirections = getMatchedDirections();
-        console.log("Matched directions are: " + matchedDirections);
-
+        
 
         // Randomly select one of the directions represented in the dirSelector.
         // This makes sure each possible direction gets the same probability 
         // of selection regardless of the length of the dirSelector array.
-        console.log("The dir selector is: " + dirSelector);
-        selectedDir = dirSelector[Math.floor(Math.random() * dirSelector.length)];
+        
+        selectedDir = distHolder[Math.floor(Math.random() * distHolder.length)][0];
         console.log("Selected dir is: " + selectedDir);
         console.log(tableArray);
         if(selectedDir === "N"){
