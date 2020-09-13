@@ -158,7 +158,7 @@ let selectedDir = "";
 // Number of full random solves to be done
 // and holder for the output state of each 
 // solve attempt.
-let iterCount = 40;
+let iterCount = 5;
 let moveHolder = [];
 let returnedMove = [];
 
@@ -483,15 +483,49 @@ for(let iter = 0; iter < iterCount; iter ++){
 // Report the results
 let numCellsFinished = 0;
 let arrayFinished = [];
+// For calculating statistics and displaying the best solve attempt found in the random iterations.
+let sumCellFilled = 0;
+let meanNumCellsFilled = 0.0;
+let bestIterNumCellsFilled = 0;
+let bestIterNum = undefined;
 for(let i = 0; i < iterCount; i++){
     numCellsFinished = moveHolder[i][0];
     console.log("For iteration #" + (i + 1) + " " + numCellsFinished + " cells were filled.");
-    if(numCellsFinished = numRows * numCols){
+    sumCellFilled += numCellsFinished;
+    if(numCellsFinished === numRows * numCols){
         console.log("Successfully finished iteration #" + (i + 1));
         arrayFinished = moveHolder[i][1];
         console.log(arrayFinished);
     }
+
+    if(numCellsFinished > bestIterNumCellsFilled){
+        bestIterNumCellsFilled = numCellsFinished;
+        bestIterNum = i + 1;
+    }
+
 }
+
+meanNumCellsFilled = sumCellFilled / iterCount;
+
+console.log("The mean number of cells filled from these iterations was: " + meanNumCellsFilled);
+
+console.log("Iteration: " + bestIterNum + " had the most cells filled: " + bestIterNumCellsFilled);
+
+// Display the outcome of the best iteration on the table at the end:
+clearGrid();
+
+// The bestIterNum is 1-based, but need 0-based for the Array index.
+let bestIterArray = moveHolder[bestIterNum - 1][1];
+
+for(let currRow = 0;  currRow < numRows; currRow++){
+    for(let currCol = 0; currCol < numCols; currCol++){
+        if(bestIterArray[currRow][currCol] != undefined){
+            document.getElementById(currRow + "-" + currCol).innerHTML = bestIterArray[currRow][currCol];
+        }
+    }
+}
+
+
 
 //let nextButton = document.getElementById("forward-button");
 //nextButton.addEventListener("click", makeMove); 
