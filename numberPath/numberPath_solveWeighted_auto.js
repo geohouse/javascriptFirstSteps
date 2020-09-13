@@ -186,7 +186,7 @@ let selectedDir = "";
 // Number of full random solves to be done
 // and holder for the output state of each 
 // solve attempt.
-let iterCount = 50;
+let iterCount = 500;
 let moveHolder = [];
 let returnedMove = [];
 
@@ -204,10 +204,11 @@ let matchedIndices = [];
 let matchedDirections = [];
 let directionWeights = [];
 // The probability of visiting any cell that is distance 1 away ( x however many)
-// directions have a distance of 1. (all other cells have probability of 1-dist1Weight)
-let dist1Weight = 0.95;
+// directions have a distance of 1. (all other cells have probability of 1-dist1Weight). 0.95
+// 1.0 (with dist2Weight 0.55) returns average of 40 cells filled over 500 iterations and reliably >= 1 solve/500 runs.
+let dist1Weight = 1.0;
 // The probability of NOT visiting any cell that is distance 2 away (to try and 
-// prevent cut-offs of paths that would otherwise be viable 'turn-arounds')
+// prevent cut-offs of paths that would otherwise be viable 'turn-arounds'). 0.55
 let dist2Weight = 0.55;
 
 // Will be an nested Array returned by makeMoves,
