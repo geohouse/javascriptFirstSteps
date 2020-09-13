@@ -160,7 +160,8 @@ let matchedDirections = [];
 let directionWeights = [];
 // The probability of visiting any cell that is distance 1 away ( x however many)
 // directions have a distance of 1. (all other cells have probability of 1-dist1Weight)
-let dist1Weight = 0.9;
+let dist1Weight = 0.95;
+let dist2Weight = 0.9;
 
 // Number of full random solves done
 let iterCount = 0;
@@ -171,6 +172,7 @@ function makeMove(){
     selectedDir = "";
     distHolder = initializeDistHolder();
     currDist = 0;
+    directionWeights = [];
 
     console.log(currNum);
 
@@ -322,10 +324,10 @@ function makeMove(){
 
         //matchedIndices = which(1);
         matchedDirections = getMatchedDirections(1);
-        console.log("Matched directions 1 are: " + matchedDirections);
+        
+        if(matchedDirections.length > 0){
+            console.log("Matched directions 1 are: " + matchedDirections);
 
-        if(matchedIndices.length > 0){
-            console.log("Matched indices 1 is: " + matchedIndices);
 
             for(let i = 0; i< distHolder.length; i++){
                 // if the iterated direction of distHolder is in
@@ -337,8 +339,6 @@ function makeMove(){
                     directionWeights[i] = [distHolder[i][0], 1 - dist1Weight];
                 }
             }
-            
-            console.log("The direction weights are: " + directionWeights);
             //console.log("The weight keys are: " + Object.keys(directionWeights));
             //console.log("The weight values are: " + Object.values(directionWeights));
 
@@ -346,18 +346,51 @@ function makeMove(){
             matchedDirections = getMatchedDirections(2);
             if(matchedDirections.length > 0){
                 console.log("Matched directions 2 is: " + matchedDirections);
+                for(let i = 0; i < distHolder.length; i++){
+                    directionWeights[i] = [distHolder[i][0], 1/distHolder.length];
+                }
+            } else{
+                // Else set equal weights
+                for(let i = 0; i < distHolder.length; i++){
+                    directionWeights[i] = [distHolder[i][0], 1/distHolder.length];
+                }
             }
         }
         
+        console.log("The direction weights are: " + directionWeights);
         
+        function selectDir(){
+            let sumDirWeights = 0;
+            let selectedDir = "";
+            let randThresh = 0.0;
+            let runningSum = 0;
+            for(let i = 0; i < directionWeights.length; i++){
+                sumDirWeights += directionWeights[i][1];
+            }
 
-        
+            console.log("Sum dir weights is: " + sumDirWeights);
+
+            randThresh = Math.random() * sumDirWeights;
+            console.log("The randThresh is: " + randThresh);
+            for(let i = 0; i < directionWeights.length; i++){
+                runningSum += directionWeights[i][1];
+                if(runningSum > randThresh){
+                    selectedDir = directionWeights[i][0];
+                    console.log("Selected direction is: " + selectedDir);
+                    return selectedDir;
+                }
+            }
+            
+        }
+
+        selectedDir = selectDir();
+        //console.log("Total dir weights is: " + totalDirWeights);
 
         // Randomly select one of the directions represented in the dirSelector.
         // This makes sure each possible direction gets the same probability 
         // of selection regardless of the length of the dirSelector array.
         
-        selectedDir = distHolder[Math.floor(Math.random() * distHolder.length)][0];
+        //selectedDir = distHolder[Math.floor(Math.random() * distHolder.length)][0];
         console.log("Selected dir is: " + selectedDir);
         console.log(tableArray);
         if(selectedDir === "N"){
