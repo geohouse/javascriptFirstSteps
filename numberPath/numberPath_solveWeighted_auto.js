@@ -186,7 +186,7 @@ let selectedDir = "";
 // Number of full random solves to be done
 // and holder for the output state of each 
 // solve attempt.
-let iterCount = 500;
+let iterCount = 5000;
 let moveHolder = [];
 let returnedMove = [];
 
@@ -209,7 +209,7 @@ let directionWeights = [];
 let dist1Weight = 1.0;
 // The probability of NOT visiting any cell that is distance 2 away (to try and 
 // prevent cut-offs of paths that would otherwise be viable 'turn-arounds'). 0.55
-let dist2Weight = 0.55;
+let dist2Weight = 0.7;
 
 // Will be an nested Array returned by makeMoves,
 // where the first element in each nested Array is
@@ -582,15 +582,23 @@ console.log("Iteration: " + bestIterNum + " had the most cells filled: " + bestI
 // The bestIterNum is 1-based, but need 0-based for the Array index.
 //let bestIterArray = moveHolder[bestIterNum - 1][1];
 
-function displayGrid(currArray){
+
+
+function displayGrid(currArray, isToggled){
     clearGrid();
-    for(let currRow = 0;  currRow < numRows; currRow++){
-        for(let currCol = 0; currCol < numCols; currCol++){
-            if(currArray[currRow][currCol] != undefined){
-                document.getElementById(currRow + "-" + currCol).innerHTML = currArray[currRow][currCol];
+    if(isToggled){
+        console.log("test");
+
+    } else{
+        for(let currRow = 0;  currRow < numRows; currRow++){
+            for(let currCol = 0; currCol < numCols; currCol++){
+                
+                    if(currArray[currRow][currCol] != undefined){
+                        document.getElementById(currRow + "-" + currCol).innerHTML = currArray[currRow][currCol];
+                    }
+                }
             }
         }
-    }
 }
 
 let numPuzzlesFinished = arrayFinished.length;
@@ -621,19 +629,31 @@ function decrementPuzzleDisplay(){
     }
 }
 
+let isToggled = false;
+
+function queryCheckStatus(){
+    isToggled = toggle.checked;
+    // update the displayGrid every time the box is checked or not
+    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled)
+    return isToggled;
+}
+
+let toggle = document.getElementById("toggle");
+toggle.addEventListener("click", queryCheckStatus);
+
 function nextPuzzle(){
 
     currentPuzzleDisplayed = incrementPuzzleDisplay();
     console.log("In next. and current puzzle num is:" + currentPuzzleDisplayed);
     // Subtract 1 to convert to 0-based indexing into the holder array
-    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)]);
+    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
 }
 
 function prevPuzzle(){
     currentPuzzleDisplayed = decrementPuzzleDisplay();
     console.log("In prev. and current puzzle num is:" + currentPuzzleDisplayed);
     // Subtract 1 to convert to 0-based indexing into the holder array
-    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)]);
+    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
 }
 
 let nextButton = document.getElementById("forward-button");
@@ -641,6 +661,12 @@ nextButton.addEventListener("click", nextPuzzle);
 
 let prevButton = document.getElementById("backward-button");
 prevButton.addEventListener("click", prevPuzzle); 
+
+
+
+
+
+
 
 /*
 for(currNum = 1; currNum <= (numRows * numCols); currNum++){
