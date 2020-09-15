@@ -551,14 +551,17 @@ let sumCellFilled = 0;
 let meanNumCellsFilled = 0.0;
 let bestIterNumCellsFilled = 0;
 let bestIterNum = undefined;
+// Keep track of how many iterations gave a complete puzzle
+let numCompleted = 0;
 for(let i = 0; i < iterCount; i++){
     numCellsFinished = moveHolder[i][0];
     console.log("For iteration #" + (i + 1) + " " + numCellsFinished + " cells were filled.");
     sumCellFilled += numCellsFinished;
     if(numCellsFinished === numRows * numCols){
         console.log("Successfully finished iteration #" + (i + 1));
-        arrayFinished = moveHolder[i][1];
+        arrayFinished.push(moveHolder[i][1]);
         console.log(arrayFinished);
+        numCompleted += 1;
     }
 
     if(numCellsFinished > bestIterNumCellsFilled){
@@ -574,24 +577,70 @@ console.log("The mean number of cells filled from these iterations was: " + mean
 
 console.log("Iteration: " + bestIterNum + " had the most cells filled: " + bestIterNumCellsFilled);
 
-// Display the outcome of the best iteration on the table at the end:
-clearGrid();
+
 
 // The bestIterNum is 1-based, but need 0-based for the Array index.
-let bestIterArray = moveHolder[bestIterNum - 1][1];
+//let bestIterArray = moveHolder[bestIterNum - 1][1];
 
-for(let currRow = 0;  currRow < numRows; currRow++){
-    for(let currCol = 0; currCol < numCols; currCol++){
-        if(bestIterArray[currRow][currCol] != undefined){
-            document.getElementById(currRow + "-" + currCol).innerHTML = bestIterArray[currRow][currCol];
+function displayGrid(currArray){
+    clearGrid();
+    for(let currRow = 0;  currRow < numRows; currRow++){
+        for(let currCol = 0; currCol < numCols; currCol++){
+            if(currArray[currRow][currCol] != undefined){
+                document.getElementById(currRow + "-" + currCol).innerHTML = currArray[currRow][currCol];
+            }
         }
     }
 }
 
+let numPuzzlesFinished = arrayFinished.length;
+let currentPuzzleDisplayed = 1;
+// If a complete puzzle was found, by default display the first finished puzzle.
+if(numPuzzlesFinished > 0){
+    displayGrid(arrayFinished[0])
+    currentPuzzleDisplayed = 1;
+}
 
+document.getElementById("numGenerated").innerHTML = numCompleted + " full puzzles found!"
 
-//let nextButton = document.getElementById("forward-button");
-//nextButton.addEventListener("click", makeMove); 
+function incrementPuzzleDisplay(){
+    // Increment if possible, otherwise loop back to the first puzzle
+    if(currentPuzzleDisplayed < numPuzzlesFinished){
+        return(currentPuzzleDisplayed += 1);
+    } else{
+        return(1);
+    }
+}
+
+function decrementPuzzleDisplay(){
+    // Decrement if possible, otherwise loop back to the last puzzle
+    if(currentPuzzleDisplayed > 1){
+        return(currentPuzzleDisplayed -= 1);
+    } else{
+        return(numPuzzlesFinished);
+    }
+}
+
+function nextPuzzle(){
+
+    currentPuzzleDisplayed = incrementPuzzleDisplay();
+    console.log("In next. and current puzzle num is:" + currentPuzzleDisplayed);
+    // Subtract 1 to convert to 0-based indexing into the holder array
+    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)]);
+}
+
+function prevPuzzle(){
+    currentPuzzleDisplayed = decrementPuzzleDisplay();
+    console.log("In prev. and current puzzle num is:" + currentPuzzleDisplayed);
+    // Subtract 1 to convert to 0-based indexing into the holder array
+    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)]);
+}
+
+let nextButton = document.getElementById("forward-button");
+nextButton.addEventListener("click", nextPuzzle); 
+
+let prevButton = document.getElementById("backward-button");
+prevButton.addEventListener("click", prevPuzzle); 
 
 /*
 for(currNum = 1; currNum <= (numRows * numCols); currNum++){

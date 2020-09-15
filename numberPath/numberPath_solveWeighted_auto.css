@@ -1,10 +1,19 @@
 
 #forward-button{
     background-color: yellowgreen;
-    width: 150px;
-    height: 20px;
+    width: 200px;
+    height: 40px;
 }
 
+#backward-button{
+    background-color: orangered;
+    width: 200px;
+    height: 40px;
+}
+
+p{
+    background-color: greenyellow;
+}
 .empty-cell{
     background-color: lightgreen;
     width: 20px;
