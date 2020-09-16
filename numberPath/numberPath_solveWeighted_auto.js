@@ -591,6 +591,39 @@ let cellsToShow = [
     "8-0", "8-2", "8-4", "8-6", "8-8"
 ];
 
+// As a measure of the rough difficulty, tabulate how long each of the 'loops' that need to be filled in 
+// between initially filled in 
+// values is. The longer loop length, the harder the puzzle.
+function calcLoopLengths(currArray){
+    let currCellToShow = undefined;
+    let currCellToShow_row = undefined;
+    let currCellToShow_col = undefined;
+    let initialCellValueHolder = [];
+    for(i = 0; i < cellsToShow.length; i++){
+        // e.g. "0-2"
+        currCellToShow = cellsToShow[i];
+        // Javascript slices strings similar to Python!
+        currCellToShow_row = currCellToShow[0];
+        currCellToShow_col = currCellToShow[2];
+        initialCellValueHolder.push(currArray[currCellToShow_row][currCellToShow_col]);
+    }
+
+    // Sort the initialCellValueHolder ascending. Need the helper function to tell sort
+    // how we want the elements sorted (if return < 0, a is ordered before b; if return >0, b is ordered before a)
+    initialCellValueHolder = initialCellValueHolder.sort(function(a, b){return a - b});
+    let loopLengths = []
+    let currVal = 0;
+    let nextVal = 0;
+    for(let j = 0; j < initialCellValueHolder.length - 1; j++){
+        currVal = initialCellValueHolder[j];
+        nextVal = initialCellValueHolder[j + 1];
+        loopLengths.push(nextVal - currVal);
+    }
+    return loopLengths;
+}
+
+
+
 
 function displayGrid(currArray, isToggled){
     clearGrid();
@@ -649,6 +682,7 @@ function decrementPuzzleDisplay(){
 }
 
 let isToggled = false;
+let loopLengths = [];
 
 function checkToggleStatus(){
     isToggled = toggle.checked;
@@ -666,6 +700,8 @@ function nextPuzzle(){
     console.log("In next. and current puzzle num is:" + currentPuzzleDisplayed);
     // Subtract 1 to convert to 0-based indexing into the holder array
     displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
+    loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
+    console.log("The loop lengths are: " + loopLengths);
 }
 
 function prevPuzzle(){
@@ -673,6 +709,8 @@ function prevPuzzle(){
     console.log("In prev. and current puzzle num is:" + currentPuzzleDisplayed);
     // Subtract 1 to convert to 0-based indexing into the holder array
     displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
+    loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
+    console.log("The loop lengths are: " + loopLengths);
 }
 
 let nextButton = document.getElementById("forward-button");
