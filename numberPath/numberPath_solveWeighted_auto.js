@@ -582,13 +582,32 @@ console.log("Iteration: " + bestIterNum + " had the most cells filled: " + bestI
 // The bestIterNum is 1-based, but need 0-based for the Array index.
 //let bestIterArray = moveHolder[bestIterNum - 1][1];
 
+// Define the cells that should be shown to present the puzzle ready to solve
+let cellsToShow = [
+    "0-0", "0-2", "0-4", "0-6", "0-8",
+    "2-0", "2-8",
+    "4-0", "4-8",
+    "6-0", "6-8",
+    "8-0", "8-2", "8-4", "8-6", "8-8"
+];
 
 
 function displayGrid(currArray, isToggled){
     clearGrid();
+    let currCellToShow = undefined;
+    let currCellToShow_row = undefined;
+    let currCellToShow_col = undefined;
+
     if(isToggled){
         console.log("test");
-
+        for(i = 0; i < cellsToShow.length; i++){
+            // e.g. "0-2"
+            currCellToShow = cellsToShow[i];
+            // Javascript slices strings similar to Python!
+            currCellToShow_row = currCellToShow[0];
+            currCellToShow_col = currCellToShow[2];
+            document.getElementById(currCellToShow).innerHTML = currArray[currCellToShow_row][currCellToShow_col];
+        }
     } else{
         for(let currRow = 0;  currRow < numRows; currRow++){
             for(let currCol = 0; currCol < numCols; currCol++){
@@ -631,15 +650,15 @@ function decrementPuzzleDisplay(){
 
 let isToggled = false;
 
-function queryCheckStatus(){
+function checkToggleStatus(){
     isToggled = toggle.checked;
-    // update the displayGrid every time the box is checked or not
+    // update the displayGrid every time the box is checked or not  
     displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled)
     return isToggled;
 }
 
 let toggle = document.getElementById("toggle");
-toggle.addEventListener("click", queryCheckStatus);
+toggle.addEventListener("click", checkToggleStatus);
 
 function nextPuzzle(){
 

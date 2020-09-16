@@ -18,4 +18,14 @@ p{
     background-color: lightgreen;
     width: 20px;
     height: 20px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+
+    border-left-color: black;
+    border-right-color: black;
+    border-top-color: black;
+    border-bottom-color: black;
+    
 }
