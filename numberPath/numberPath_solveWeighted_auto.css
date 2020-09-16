@@ -11,7 +11,7 @@
     height: 40px;
 }
 
-p{
+#num-generated{
     background-color: greenyellow;
 }
 .empty-cell{
@@ -28,4 +28,16 @@ p{
     border-top-color: black;
     border-bottom-color: black;
     
+}
+
+.easy{
+    background-color: lightgreen;
+}
+
+.medium{
+    background-color: gold;
+}
+
+.hard{
+    background-color: red;
 }

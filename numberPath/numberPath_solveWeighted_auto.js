@@ -655,10 +655,15 @@ function displayGrid(currArray, isToggled){
 
 let numPuzzlesFinished = arrayFinished.length;
 let currentPuzzleDisplayed = 1;
+let loopLengths = [];
+
 // If a complete puzzle was found, by default display the first finished puzzle.
 if(numPuzzlesFinished > 0){
     displayGrid(arrayFinished[0])
     currentPuzzleDisplayed = 1;
+    loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
+    console.log("The loop lengths are: " + loopLengths);
+    assignPuzzleDifficulty();
 }
 
 document.getElementById("numGenerated").innerHTML = numCompleted + " full puzzles found!"
@@ -682,7 +687,6 @@ function decrementPuzzleDisplay(){
 }
 
 let isToggled = false;
-let loopLengths = [];
 
 function checkToggleStatus(){
     isToggled = toggle.checked;
@@ -694,6 +698,60 @@ function checkToggleStatus(){
 let toggle = document.getElementById("toggle");
 toggle.addEventListener("click", checkToggleStatus);
 
+function calcMean(inputArray){
+    let sum = 0;
+    let mean = 0;
+    for(let i = 0; i < inputArray.length; i++){
+        sum += inputArray[i];
+    }
+    mean = sum / inputArray.length;
+    return mean;
+}
+
+function calcMedian(inputArray){
+    
+    let median = 0;
+    let halfIndex = 0;
+    // Sort the loop lengths ascending. Need the helper function to tell sort
+    // how we want the elements sorted (if return < 0, a is ordered before b; if return >0, b is ordered before a)
+    inputArray = inputArray.sort(function(a, b){return a - b});
+
+    if(inputArray.length % 2 === 0){
+        halfIndex = inputArray.length / 2;
+        let firstNum = inputArray[halfIndex];
+        let secondNum = inputArray[halfIndex + 1];
+        median = (firstNum + secondNum) / 2;
+    } else{
+        halfIndex = Math.floor(inputArray.length / 2)
+        median = inputArray[halfIndex];
+    }
+    return median;
+}
+
+// Use the calculated loop lengths to assign puzzle difficulty
+function assignPuzzleDifficulty(){
+
+    let meanLoopLength = calcMean(loopLengths);
+    let medianLoopLength = calcMedian(loopLengths);
+    console.log("The mean loop length is: " + meanLoopLength);
+    console.log("The median loop length is: " + medianLoopLength);
+
+    if(meanLoopLength > 5 && medianLoopLength > 2){
+        console.log("The puzzle is hard");
+        document.getElementById("puzzle-diff").className = "hard";
+        document.getElementById("puzzle-diff").innerHTML = "Hard";
+    } else if((meanLoopLength > 5 && medianLoopLength == 2) || meanLoopLength > 4){
+        console.log("The puzzle is medium");
+        document.getElementById("puzzle-diff").className = "medium";
+        document.getElementById("puzzle-diff").innerHTML = "Medium";
+    } else{
+        console.log("The puzzle is easy");
+        document.getElementById("puzzle-diff").className = "easy";
+        document.getElementById("puzzle-diff").innerHTML = "Easy";
+    }
+
+}
+
 function nextPuzzle(){
 
     currentPuzzleDisplayed = incrementPuzzleDisplay();
@@ -702,6 +760,7 @@ function nextPuzzle(){
     displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
     loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
     console.log("The loop lengths are: " + loopLengths);
+    assignPuzzleDifficulty();
 }
 
 function prevPuzzle(){
@@ -711,6 +770,7 @@ function prevPuzzle(){
     displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
     loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
     console.log("The loop lengths are: " + loopLengths);
+    assignPuzzleDifficulty();
 }
 
 let nextButton = document.getElementById("forward-button");
