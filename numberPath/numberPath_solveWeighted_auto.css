@@ -15,9 +15,10 @@
     background-color: greenyellow;
 }
 .empty-cell{
-    background-color: lightgreen;
+    background-color: lightseagreen;
     width: 20px;
     height: 20px;
+    border: solid;
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;
@@ -32,12 +33,15 @@
 
 .easy{
     background-color: lightgreen;
+    width: 70px;
 }
 
 .medium{
     background-color: gold;
+    width: 70px;
 }
 
 .hard{
     background-color: red;
+    width: 70px;
 }
