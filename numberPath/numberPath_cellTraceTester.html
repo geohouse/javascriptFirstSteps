@@ -13,10 +13,13 @@
             margin-left: -1px;
             top: 0;
             }
-        td{
+
+        table{
+            table-layout: fixed;
+        }
+
+        td {
             border: solid;
-            width: 10px;
-            height: 10px;
         }
 
         div{
@@ -34,22 +37,30 @@
 <tr>
     <td id="0-0">Test</td>
     <td id="0-1">Test2</td>
+    <td id="0-2">Test3</td>
 </tr>
 <tr>
-    <td id="1-0">Test3</td>
-    <td id="1-1">Test4</td>
+    <td id="1-0">Test4</td>
+    <td id="1-1">Test5</td>
+    <td id="1-2">Test6</td>
 </tr>
 
 </table>
-
-<div id="d0-0"></div>
-<div id="d0-1"></div>
-
 
 </body>
 
 <script>
 //document.getElementById("tab")
+
+function makeNewDiv(idToGive){
+    var newDiv = document.createElement('div');
+    newDiv.id = idToGive;
+    document.body.appendChild(newDiv);
+}
+
+makeNewDiv("d0-0");
+makeNewDiv("d0-1");
+
 
 // Get the dimensions of the bounding rectangle of the table cell.
 var dim0_0 = document.getElementById("0-0").getBoundingClientRect();
@@ -74,14 +85,7 @@ document.getElementById("d0-1").style.left = (dim0_1.left + ((3/8) * dim0_1.widt
 document.getElementById("d0-1").style.top = dim0_1.top + "px";
 
 
-
 // Left turn from top
-
-function makeNewDiv(idToGive){
-    var newDiv = document.createElement('div');
-    newDiv.id = idToGive;
-    document.body.appendChild(newDiv);
-}
 
 makeNewDiv("1-0-th");
 makeNewDiv("1-0-lh");
@@ -101,6 +105,72 @@ document.getElementById("1-0-lh").style.height = (dims.height/4) + "px";
 document.getElementById("1-0-lh").style.position = "absolute";
 document.getElementById("1-0-lh").style.left = dims.left + "px";
 document.getElementById("1-0-lh").style.top = (dims.top + ((3/8) * dims.height)) + "px";
+
+
+// Right turn from top
+
+makeNewDiv("1-1-th");
+makeNewDiv("1-1-rh");
+
+// Get the dimensions of the bounding rectangle of the table cell.
+var dims = document.getElementById("1-1").getBoundingClientRect();
+document.getElementById("1-1-th").style.width = (dims.width/4) + "px";
+document.getElementById("1-1-th").style.height = (dims.height/2) + "px";
+// Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+document.getElementById("1-1-th").style.position = "absolute";
+document.getElementById("1-1-th").style.left = (dims.left + ((3/8) * dims.width)) + "px";
+document.getElementById("1-1-th").style.top = dims.top + "px";
+
+document.getElementById("1-1-rh").style.width = (dims.width/2) + ((1/8) * dims.width)  + "px";
+document.getElementById("1-1-rh").style.height = (dims.height/4) + "px";
+// Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+document.getElementById("1-1-rh").style.position = "absolute";
+document.getElementById("1-1-rh").style.left = dims.left + (dims.width/2) - ((1/8) * dims.width) + "px";
+document.getElementById("1-1-rh").style.top = (dims.top + ((3/8) * dims.height)) + "px";
+
+
+// Right turn from bottom
+
+makeNewDiv("0-2-bh");
+makeNewDiv("0-2-rh");
+
+// Get the dimensions of the bounding rectangle of the table cell.
+var dims = document.getElementById("0-2").getBoundingClientRect();
+document.getElementById("0-2-bh").style.width = (dims.width/4) + "px";
+document.getElementById("0-2-bh").style.height = (dims.height/2) + "px";
+// Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+document.getElementById("0-2-bh").style.position = "absolute";
+document.getElementById("0-2-bh").style.left = (dims.left + ((3/8) * dims.width)) + "px";
+document.getElementById("0-2-bh").style.top = dims.top + (dims.height/2) + "px";
+
+document.getElementById("0-2-rh").style.width = (dims.width/2) + ((1/8) * dims.width)  + "px";
+document.getElementById("0-2-rh").style.height = (dims.height/4) + "px";
+// Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+document.getElementById("0-2-rh").style.position = "absolute";
+document.getElementById("0-2-rh").style.left = dims.left + (dims.width/2) - ((1/8) * dims.width) + "px";
+document.getElementById("0-2-rh").style.top = (dims.top + ((3/8) * dims.height)) + "px";
+
+// Left turn from top
+
+makeNewDiv("1-2-bh");
+makeNewDiv("1-2-lh");
+
+// Get the dimensions of the bounding rectangle of the table cell.
+var dims = document.getElementById("1-2").getBoundingClientRect();
+document.getElementById("1-2-bh").style.width = (dims.width/4) + "px";
+document.getElementById("1-2-bh").style.height = (dims.height/2) + "px";
+// Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+document.getElementById("1-2-bh").style.position = "absolute";
+document.getElementById("1-2-bh").style.left = (dims.left + ((3/8) * dims.width)) + "px";
+document.getElementById("1-2-bh").style.top = dims.top + (dims.height/2) + "px";
+
+document.getElementById("1-2-lh").style.width = (dims.width/2) + ((1/8) * dims.width)  + "px";
+document.getElementById("1-2-lh").style.height = (dims.height/4) + "px";
+// Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+document.getElementById("1-2-lh").style.position = "absolute";
+document.getElementById("1-2-lh").style.left = dims.left + "px";
+document.getElementById("1-2-lh").style.top = (dims.top + ((3/8) * dims.height)) + "px";
+
 
 </script>
 
