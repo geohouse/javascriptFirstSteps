@@ -804,6 +804,9 @@ function tracePath(currArray, isToggled){
     let currRow = 0;
     let currCol = 0;
 
+    // Clear any previous traces regardless of whether the check box is toggled or not
+    document.querySelectorAll('.trace').forEach(element => element.remove());
+
     if(!isToggled){
 
         for(let pathNum = 1; pathNum <= numCols * numRows; pathNum ++){
@@ -948,8 +951,9 @@ let isToggled = false;
 
 function checkToggleStatus(){
     isToggled = toggle.checked;
-    // update the displayGrid every time the box is checked or not  
-    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled)
+    // update the displayGrid and whether the solved path is shown every time the box is checked or not  
+    displayGrid(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
+    tracePath(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
     return isToggled;
 }
 
