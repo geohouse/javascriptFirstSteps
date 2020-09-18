@@ -18,7 +18,7 @@
     background-color: lightseagreen;
     width: 20px;
     height: 20px;
-    border: solid;
+    /*border: solid;*/
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;
@@ -44,4 +44,8 @@
 .hard{
     background-color: red;
     width: 70px;
+}
+
+.trace{
+    background-color:red;
 }

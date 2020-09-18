@@ -653,9 +653,266 @@ function displayGrid(currArray, isToggled){
         }
 }
 
+// Use the calculated loop lengths to assign puzzle difficulty
+function assignPuzzleDifficulty(){
+
+    let meanLoopLength = calcMean(loopLengths);
+    let medianLoopLength = calcMedian(loopLengths);
+    console.log("The mean loop length is: " + meanLoopLength);
+    console.log("The median loop length is: " + medianLoopLength);
+
+    if(meanLoopLength > 5 && medianLoopLength > 2){
+        console.log("The puzzle is hard");
+        document.getElementById("puzzle-diff").className = "hard";
+        document.getElementById("puzzle-diff").innerHTML = "Hard";
+    } else if((meanLoopLength > 5 && medianLoopLength == 2) || meanLoopLength > 4){
+        console.log("The puzzle is medium");
+        document.getElementById("puzzle-diff").className = "medium";
+        document.getElementById("puzzle-diff").innerHTML = "Medium";
+    } else{
+        console.log("The puzzle is easy");
+        document.getElementById("puzzle-diff").className = "easy";
+        document.getElementById("puzzle-diff").innerHTML = "Easy";
+    }
+
+}
+
+function makeNewDiv(idToGive){
+    var newDiv = document.createElement('div');
+    newDiv.id = idToGive;
+    // Allow CSS styling using the class "trace"
+    newDiv.className = "trace";
+    document.body.appendChild(newDiv);
+}
+
+
+function topHalf(cellID){
+    topHalfCellID = cellID + "-th";
+    makeNewDiv(topHalfCellID);
+    // input cellID in form of "0-0"
+    // Get the dimensions of the bounding rectangle of the table cell.
+    var dims = document.getElementById(cellID).getBoundingClientRect();
+    console.log("dim top is: " + dims.top);
+    console.log("dim left is: " + dims.left);
+    document.getElementById(topHalfCellID).style.width = (dims.width/4) + "px";
+    document.getElementById(topHalfCellID).style.height = dims.height/2 + "px";
+    // Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+    document.getElementById(topHalfCellID).style.position = "absolute";
+    document.getElementById(topHalfCellID).style.left = (dims.left + ((3/8) * dims.width)) + "px";
+    document.getElementById(topHalfCellID).style.top = dims.top + "px";
+
+}
+
+function bottomHalf(cellID){
+    bottomHalfCellID = cellID + "-bh";
+    makeNewDiv(bottomHalfCellID);
+    // input cellID in form of "0-0"
+    // Get the dimensions of the bounding rectangle of the table cell.
+    var dims = document.getElementById(cellID).getBoundingClientRect();
+    console.log("dim top is: " + dims.top);
+    console.log("dim left is: " + dims.left);
+    document.getElementById(bottomHalfCellID).style.width = (dims.width/4) + "px";
+    document.getElementById(bottomHalfCellID).style.height = dims.height/2 + "px";
+    // Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+    document.getElementById(bottomHalfCellID).style.position = "absolute";
+    document.getElementById(bottomHalfCellID).style.left = (dims.left + ((3/8) * dims.width)) + "px";
+    document.getElementById(bottomHalfCellID).style.top = (dims.top + (dims.height/2)) + "px";
+
+}
+
+function leftHalf(cellID){
+    leftHalfCellID = cellID + "-lh";
+    makeNewDiv(leftHalfCellID);
+    // input cellID in form of "0-0"
+    // Get the dimensions of the bounding rectangle of the table cell.
+    var dims = document.getElementById(cellID).getBoundingClientRect();
+    console.log("dim top is: " + dims.top);
+    console.log("dim left is: " + dims.left);
+    document.getElementById(leftHalfCellID).style.width = (dims.width/2) + "px";
+    document.getElementById(leftHalfCellID).style.height = (dims.height/4) + "px";
+    // Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+    document.getElementById(leftHalfCellID).style.position = "absolute";
+    document.getElementById(leftHalfCellID).style.left = dims.left + "px";
+    document.getElementById(leftHalfCellID).style.top = dims.top + ((3/8) * dims.height) + "px";
+
+}
+
+function rightHalf(cellID){
+    rightHalfCellID = cellID + "-rh";
+    makeNewDiv(rightHalfCellID);
+    // input cellID in form of "0-0"
+    // Get the dimensions of the bounding rectangle of the table cell.
+    var dims = document.getElementById(cellID).getBoundingClientRect();
+    console.log("dim top is: " + dims.top);
+    console.log("dim left is: " + dims.left);
+    document.getElementById(rightHalfCellID).style.width = (dims.width/2) + "px";
+    document.getElementById(rightHalfCellID).style.height = (dims.height/4) + "px";
+    // Need to set position to absolute first otherwise setting the .left and .top doesn't do anything.
+    document.getElementById(rightHalfCellID).style.position = "absolute";
+    document.getElementById(rightHalfCellID).style.left = (dims.left + ((1/2) * dims.width)) + "px";
+    document.getElementById(rightHalfCellID).style.top = (dims.top + ((3/8) * dims.height)) + "px";
+
+}
+
+function traceCell(currArray, currRow, currCol, pathNum, direction){
+    let dirIncrement = 0;
+    if(direction === 'next'){
+        dirIncrement = 1;
+        
+    }
+
+    if(direction === 'last'){
+        dirIncrement = -1;
+    }
+    //console.log("dirIncrement is: " + dirIncrement);
+    //console.log("currRow is: " + currRow + " currCol is: " + currCol + " pathNum is: " + pathNum);
+    // N
+    if(currRow > 0 && currArray[currRow - 1][currCol] === pathNum + dirIncrement){
+        nextDirection = 'N';
+        //console.log("tracing N");
+        topHalf(currRow + "-" + currCol);
+    }
+    // S
+    if(currRow < (numRows - 1) && currArray[currRow + 1][currCol] === pathNum + dirIncrement){
+        nextDirection = 'S';
+        //console.log("tracing S");
+        bottomHalf(currRow + "-" + currCol);
+    }
+    // W
+    if(currCol > 0 && currArray[currRow][currCol - 1] === pathNum + dirIncrement){
+        nextDirection = 'W';
+        //console.log("tracing W");
+        leftHalf(currRow + "-" + currCol);
+    }
+    // E
+    if(currCol < (numCols - 1) && currArray[currRow][currCol + 1] === pathNum + dirIncrement){
+        nextDirection = 'E';
+        //console.log("tracing E");
+        rightHalf(currRow + "-" + currCol);
+    }
+
+}
+
+
+
+
+function tracePath(currArray, isToggled){
+
+    let lastDirection = "";
+    let currVisitedCoords = [];
+    let nextDirection = "";
+    let currRow = 0;
+    let currCol = 0;
+
+    if(!isToggled){
+
+        for(let pathNum = 1; pathNum <= numCols * numRows; pathNum ++){
+
+            console.log("Path num is: " + pathNum);
+            if(pathNum === 1){
+                for(let currRow = 0;  currRow < numRows; currRow++){
+                    //console.log("Curr row is: " + currRow);
+                    for(let currCol = 0; currCol < numCols; currCol++){
+                        
+                        //console.log("Curr col is: " + currCol)
+                        currEntry = currArray[currRow][currCol]
+                        if(currEntry === 1){
+                            currVisitedCoords = [currRow, currCol];
+                            //makeVerticalTrace(currRow + "-" + currCol);
+                            //makeHorizontalTrace(currRow + "-" + currCol);
+                            traceCell(currArray, currRow, currCol, pathNum, "next");
+                            //document.getElementById(currRow + "-" + currCol).className = "chosen-path";
+                            lastVisitedCoords = currVisitedCoords;
+                        }
+                    }
+                }
+            } else{
+
+                console.log("In else.");
+                console.log("Path num in else is: " + pathNum);
+                console.log(lastVisitedCoords[0]);
+                console.log(lastVisitedCoords[1]);
+                // Check the 4 possible directions around the last cell to find
+                // the next highest number.
+
+                // Check North if not the first row
+                if(lastVisitedCoords[0] > 0){
+                    //console.log("In N check");
+                    if(currArray[lastVisitedCoords[0] - 1][lastVisitedCoords[1]] === pathNum){
+                        console.log("in if.")
+                        currVisitedCoords = [lastVisitedCoords[0] - 1, lastVisitedCoords[1]];
+                        currRow = currVisitedCoords[0];
+                        currCol = currVisitedCoords[1];
+                        lastVisitedCoords = currVisitedCoords;
+                        console.log("Going to the North cell.");
+                        traceCell(currArray, currRow, currCol, pathNum, "next");
+                        traceCell(currArray, currRow, currCol, pathNum, "last");
+                        
+                    }
+                }
+
+                // Check South if not the last row
+                if(lastVisitedCoords[0] < numRows - 1){
+                    //console.log("In S check");
+                    if(currArray[lastVisitedCoords[0] + 1][lastVisitedCoords[1]] === pathNum){
+                        console.log("in if.")
+                        currVisitedCoords = [lastVisitedCoords[0] + 1, lastVisitedCoords[1]];
+                        currRow = currVisitedCoords[0];
+                        currCol = currVisitedCoords[1];
+                        lastVisitedCoords = currVisitedCoords;
+                        console.log("Going to the South cell.");
+                        traceCell(currArray, currRow, currCol, pathNum, "next");
+                        traceCell(currArray, currRow, currCol, pathNum, "last");
+                        
+                    }
+                }
+
+                // Check West if not the first col
+                if(lastVisitedCoords[1] > 0){
+                    //console.log("In W check");
+                    if(currArray[lastVisitedCoords[0]][lastVisitedCoords[1] - 1] === pathNum){
+                        console.log("in if.")
+                        currVisitedCoords = [lastVisitedCoords[0], lastVisitedCoords[1] - 1];
+                        currRow = currVisitedCoords[0];
+                        currCol = currVisitedCoords[1];
+                        lastVisitedCoords = currVisitedCoords;
+                        console.log("Going to the West cell.");
+                        traceCell(currArray, currRow, currCol, pathNum, "next");
+                        traceCell(currArray, currRow, currCol, pathNum, "last");
+                        
+                    }
+                }
+
+                // Check East if not the last col
+                if(lastVisitedCoords[1] < numCols - 1){
+                    //console.log("In E check");
+                    //console.log(lastVisitedCoords[0]);
+                    //console.log(lastVisitedCoords[1] + 1);
+                    //console.log(rowHolder[5][4]);
+                    if(currArray[lastVisitedCoords[0]][lastVisitedCoords[1] + 1] === pathNum){
+                        //console.log("in if.")
+                        currVisitedCoords = [lastVisitedCoords[0], lastVisitedCoords[1] + 1];
+                        currRow = currVisitedCoords[0];
+                        currCol = currVisitedCoords[1];
+                        lastVisitedCoords = currVisitedCoords;
+                        console.log("Going to the East cell.");
+                        traceCell(currArray, currRow, currCol, pathNum, "next");
+                        traceCell(currArray, currRow, currCol, pathNum, "last");
+                        
+                    }
+                }
+            }
+        } 
+    }
+}
+
+
+
 let numPuzzlesFinished = arrayFinished.length;
 let currentPuzzleDisplayed = 1;
 let loopLengths = [];
+
+document.getElementById("numGenerated").innerHTML = numCompleted + " full puzzles found!"
 
 // If a complete puzzle was found, by default display the first finished puzzle.
 if(numPuzzlesFinished > 0){
@@ -664,9 +921,10 @@ if(numPuzzlesFinished > 0){
     loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
     console.log("The loop lengths are: " + loopLengths);
     assignPuzzleDifficulty();
+    tracePath(arrayFinished[(currentPuzzleDisplayed - 1)]);
 }
 
-document.getElementById("numGenerated").innerHTML = numCompleted + " full puzzles found!"
+
 
 function incrementPuzzleDisplay(){
     // Increment if possible, otherwise loop back to the first puzzle
@@ -728,30 +986,6 @@ function calcMedian(inputArray){
     return median;
 }
 
-// Use the calculated loop lengths to assign puzzle difficulty
-function assignPuzzleDifficulty(){
-
-    let meanLoopLength = calcMean(loopLengths);
-    let medianLoopLength = calcMedian(loopLengths);
-    console.log("The mean loop length is: " + meanLoopLength);
-    console.log("The median loop length is: " + medianLoopLength);
-
-    if(meanLoopLength > 5 && medianLoopLength > 2){
-        console.log("The puzzle is hard");
-        document.getElementById("puzzle-diff").className = "hard";
-        document.getElementById("puzzle-diff").innerHTML = "Hard";
-    } else if((meanLoopLength > 5 && medianLoopLength == 2) || meanLoopLength > 4){
-        console.log("The puzzle is medium");
-        document.getElementById("puzzle-diff").className = "medium";
-        document.getElementById("puzzle-diff").innerHTML = "Medium";
-    } else{
-        console.log("The puzzle is easy");
-        document.getElementById("puzzle-diff").className = "easy";
-        document.getElementById("puzzle-diff").innerHTML = "Easy";
-    }
-
-}
-
 function nextPuzzle(){
 
     currentPuzzleDisplayed = incrementPuzzleDisplay();
@@ -761,6 +995,7 @@ function nextPuzzle(){
     loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
     console.log("The loop lengths are: " + loopLengths);
     assignPuzzleDifficulty();
+    tracePath(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
 }
 
 function prevPuzzle(){
@@ -771,6 +1006,7 @@ function prevPuzzle(){
     loopLengths = calcLoopLengths(arrayFinished[(currentPuzzleDisplayed - 1)]);
     console.log("The loop lengths are: " + loopLengths);
     assignPuzzleDifficulty();
+    tracePath(arrayFinished[(currentPuzzleDisplayed - 1)], isToggled);
 }
 
 let nextButton = document.getElementById("forward-button");
