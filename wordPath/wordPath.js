@@ -78,8 +78,31 @@ for(let j = 0; j < diceHolder.length; j++){
 
 }
 
+// Fisher-Yates shuffling algorithm from here:
+// https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
+function shuffleArray(){
+    for(let i = selectedLetters.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * i);
+        const tempEntry = selectedLetters[i];
+        selectedLetters[i] = selectedLetters[j]
+        selectedLetters[j] = tempEntry;
+    }
+    return selectedLetters;
+}
+
 console.log("The selected letters are: " + selectedLetters);
 
+let shuffledArray = shuffleArray();
+
+console.log("The shuffled letters are: " + shuffledArray);
+
+
+let currRow = 0;
+let currCol = 0;
+
+for(let i = 0; i < 16; i++){
+    
+}
 
 
 
