@@ -14,20 +14,18 @@
 #num-generated{
     background-color: greenyellow;
 }
-.empty-cell{
+td{
     background-color: lightseagreen;
     width: 20px;
     height: 20px;
     /*border: solid;*/
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-
-    border-left-color: black;
-    border-right-color: black;
-    border-top-color: black;
-    border-bottom-color: black;
+    border: solid black 1px;
+    text-align:center;
+    /* If change the font size here, need to change the amount of padding below to compensate to make the cells
+    consistently the same sizes whether they have an entry or not */
+    font-size:20px;
+    padding: 3px;
+    
     
 }
 
