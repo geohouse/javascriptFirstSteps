@@ -1,0 +1,10 @@
+td{
+    border: solid black 2px;
+    font-size: 36pt;
+    font-family:monospace;
+    background-color: lavender;
+    font-weight:bold;
+    padding: 10px 20px;
+    border-radius: 20px;
+    
+}
