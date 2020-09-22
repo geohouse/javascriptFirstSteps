@@ -19,6 +19,16 @@ function setUpGrid(){
 
 }
 
+function clearGrid(){
+    let currCell = undefined;
+    for(let currRow = 0; currRow < 4; currRow ++){
+        for(let currCol = 0; currCol < 4; currCol ++){
+            currCell = document.getElementById(currRow + "-" + currCol);
+            currCell.innerHTML = ""  
+        }
+    } 
+}
+
 let diceHolder = [];
 
 // dice 1
@@ -65,12 +75,13 @@ let letterHolder = {'a':0, 'b':0, 'c':0, 'd':0, 'e':0, 'f':0, 'g':0,
 
 //Math.floor(Math.random() * diceHolder.length)
 
-let dieFace = 0;
-let dieLetter = '';
+
 let selectedLetters = [];
 
-
 function rollDice(){
+    let dieFace = 0;
+    let dieLetter = '';
+    selectedLetters = [];
     // For each of the die, randomly select a face and the corresponding letter to add to the board
     for(let j = 0; j < diceHolder.length; j++){
         
@@ -91,39 +102,117 @@ function shuffleArray(){
         selectedLetters[i] = selectedLetters[j]
         selectedLetters[j] = tempEntry;
     }
+    console.log("The selected letters are: " + selectedLetters);
     return selectedLetters;
 }
 
 
-let currRow = 0;
-let currCol = 0;
 
-function displayBoard(){
+
+function displayBoard(shuffledArray){
+    let currRow = 0;
+    let currCol = 0;
+    let currEntry = "";
     for(let i = 0; i < 16; i++){
         currRow = Math.floor(i / 4);
         currCol = i - (4 * currRow);
 
         console.log("i is: " + i + " currRow is: " + currRow + " currCol is: " + currCol);
+        currEntry = shuffledArray[i];
+        if(currEntry.length === 1){
+            currEntry = currEntry.toUpperCase();
+        } else{
+            // For Qu
+            currEntry = currEntry[0].toUpperCase() + currEntry[1];
+        }
+
 
         // Assign in the letter to the correct grid position
-        document.getElementById(currRow + "-" + currCol).innerHTML = shuffledArray[i];
+        document.getElementById(currRow + "-" + currCol).innerHTML = currEntry;
 
     }
 }
 
 setUpGrid();
-rollDice();
+function makeGame(){
+    
+    clearGrid();
 
-console.log("The selected letters are: " + selectedLetters);
+    rollDice();
 
-let shuffledArray = shuffleArray();
+    let shuffledArray = shuffleArray();
 
-console.log("The shuffled letters are: " + shuffledArray);
+    console.log("The shuffled letters are: " + shuffledArray);
 
-displayBoard();
+    displayBoard(shuffledArray);
+}
+
+makeGame();
+
+let newGameButton = document.getElementById("new-game");
+newGameButton.addEventListener("click", makeGame); 
+
+function countdownTimer(){
+    // Length of the timer in minutes
+    let timerLength = 2;
+    let now = undefined;
+    // need to multiply minutes by 60000 to get the number of miliseconds 
+    let twoMinFromNow = new Date().getTime() + (2 * 60000);
+    let countDown = setInterval(function(){
+        now = new Date().getTime();
+        let diff = twoMinFromNow - now;
+
+        let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((diff % (1000 * 60) / 1000));
+
+        document.getElementById("countdown-timer").innerHTML = minutes + " min, " + seconds + "sec";
+
+        if(diff < 0){
+            clearInterval(countDown);
+            document.getElementById("countdown-timer").innerHTML = "Out of time!";
+        }
 
 
+    }, 1000);
+}
 
+let countdownStart = document.getElementById("countdown-start");
+countdownStart.addEventListener("click", countdownTimer);
+
+
+// <!-- Display the countdown timer in an element -->
+// <p id="demo"></p>
+
+// <script>
+// // Set the date we're counting down to
+// var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+
+// // Update the count down every 1 second
+// var x = setInterval(function() {
+
+// // Get today's date and time
+// var now = new Date().getTime();
+
+// // Find the distance between now and the count down date
+// var distance = countDownDate - now;
+
+// // Time calculations for days, hours, minutes and seconds
+// var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+// var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+// var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+// var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+// // Display the result in the element with id="demo"
+// document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+// + minutes + "m " + seconds + "s ";
+
+// // If the count down is finished, write some text
+// if (distance < 0) {
+//     clearInterval(x);
+//     document.getElementById("demo").innerHTML = "EXPIRED";
+// }
+// }, 1000);
+// </script>
 
 
 
