@@ -96,6 +96,8 @@ function rollDice(){
 // Fisher-Yates shuffling algorithm from here:
 // https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
 function shuffleArray(){
+    let startTime = new Date().getTime();
+    console.log(startTime);
     for(let i = selectedLetters.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * i);
         const tempEntry = selectedLetters[i];
@@ -103,6 +105,10 @@ function shuffleArray(){
         selectedLetters[j] = tempEntry;
     }
     console.log("The selected letters are: " + selectedLetters);
+    let endTime = new Date().getTime();
+    console.log(endTime);
+
+    console.log("The shuffling took: " + endTime - startTime + " ms");
     return selectedLetters;
 }
 
@@ -152,33 +158,50 @@ makeGame();
 let newGameButton = document.getElementById("new-game");
 newGameButton.addEventListener("click", makeGame); 
 
-function countdownTimer(){
+let countDown = undefined;
+let twoMinFromNow = undefined;
+
+
+function startCountdown(){
+
     // Length of the timer in minutes
     let timerLength = 2;
-    let now = undefined;
     // need to multiply minutes by 60000 to get the number of miliseconds 
-    let twoMinFromNow = new Date().getTime() + (2 * 60000);
-    let countDown = setInterval(function(){
-        now = new Date().getTime();
-        let diff = twoMinFromNow - now;
+    twoMinFromNow = new Date().getTime() + (2 * 60000);
 
-        let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((diff % (1000 * 60) / 1000));
+    countDown = setInterval(countdownTimer, 1000);
+    
+}
 
-        document.getElementById("countdown-timer").innerHTML = minutes + " min, " + seconds + "sec";
-
-        if(diff < 0){
-            clearInterval(countDown);
-            document.getElementById("countdown-timer").innerHTML = "Out of time!";
-        }
+function endCountdown(){
+    clearInterval(countDown);
+}
 
 
-    }, 1000);
+function countdownTimer(){
+    let now = new Date().getTime();
+    let diff = twoMinFromNow - now;
+    console.log("diff is: " + diff);
+    console.log(countDown);
+    console.log("in countdown timer");
+    console.log(" 2 min from now is: " + twoMinFromNow);
+    console.log("Now is: " + now);
+    let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((diff % (1000 * 60) / 1000));
+
+    document.getElementById("countdown-timer").innerHTML = minutes + " min, " + seconds + "sec";
+
+    if(diff < 0){
+        clearInterval(countDown);
+        document.getElementById("countdown-timer").innerHTML = "Out of time!";
+    }
 }
 
 let countdownStart = document.getElementById("countdown-start");
-countdownStart.addEventListener("click", countdownTimer);
+countdownStart.addEventListener("click", startCountdown);
 
+let countdownStop = document.getElementById("countdown-stop");
+countdownStop.addEventListener("click", endCountdown);
 
 // <!-- Display the countdown timer in an element -->
 // <p id="demo"></p>
