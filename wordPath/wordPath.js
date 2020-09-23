@@ -189,12 +189,16 @@ function endCountdown(){
     let secondsAsFracMin = secondEntry / 60;
     timeRemaining = minuteEntry + secondsAsFracMin;
     console.log("Setting the time remaining to be: " + timeRemaining);
+
+    // Change the text in the start button to be re-start
+    document.getElementById("countdown-start").innerHTML = "Re-start the countdown!";
     clearInterval(countDown);
 }
 
 function restartCountdown(){
     timeRemaining = timerLength;
     document.getElementById("countdown-timer").innerHTML = timeRemaining + " min, 0 sec";
+    document.getElementById("countdown-start").innerHTML = "Start the countdown!";
 }
 
 function countdownTimer(){

@@ -9,11 +9,48 @@ td{
     
 }
 
-button{
-    background-color: lightgoldenrodyellow;
+#new-game{
+    background-color: yellow;
+    border: solid rebeccapurple 5px;
     border-radius: 10px;
     width: 300px;
     height: 100px;
     font-size: 18pt;
     
+}
+
+#countdown-start{
+    background-color: lightgreen;
+    border-radius: 10px;
+    width: 200px;
+    height: 75px;
+    font-size: 18pt;
+
+}
+
+#countdown-stop{
+    background-color: lightsalmon;
+    border-radius: 10px;
+    width: 200px;
+    height: 75px;
+    font-size: 18pt;
+
+}
+
+#countdown-restart{
+    background-color: lightsteelblue;
+    border-radius: 10px;
+    width: 200px;
+    height: 75px;
+    font-size: 18pt;
+
+}
+
+section{
+    display:flex;
+}
+
+#countdown-timer{
+    font-size: 18pt;
+    color: teal;
 }
