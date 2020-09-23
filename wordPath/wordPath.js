@@ -159,37 +159,56 @@ let newGameButton = document.getElementById("new-game");
 newGameButton.addEventListener("click", makeGame); 
 
 let countDown = undefined;
-let twoMinFromNow = undefined;
-
+let timeFromNow = undefined;
+let timeRemaining = undefined;
+// Length of the timer in minutes
+let timerLength = 2.0;
 
 function startCountdown(){
 
-    // Length of the timer in minutes
-    let timerLength = 2;
-    // need to multiply minutes by 60000 to get the number of miliseconds 
-    twoMinFromNow = new Date().getTime() + (2 * 60000);
+    console.log("The time remaining in the start is: " + timeRemaining);
+    if(timeRemaining === undefined){
+        // need to multiply minutes by 60000 to get the number of miliseconds 
+        timeFromNow = new Date().getTime() + (timerLength * 60000);
+    } else{
+        timeFromNow = new Date().getTime() + (timeRemaining * 60000);
+    }
 
     countDown = setInterval(countdownTimer, 1000);
     
 }
 
 function endCountdown(){
+    console.log("ending: " + countDown);
+    // Add the value from the html inner element to the timeFromNow var
+    // so that if the countdown's started again, it picks up from where the previous
+    // countdown ended
+    let htmlText = document.getElementById("countdown-timer").innerHTML;
+    let minuteEntry = Number(htmlText.split(" min")[0]);
+    let secondEntry = Number(htmlText.split(", ")[1].split(" sec")[0]);
+    let secondsAsFracMin = secondEntry / 60;
+    timeRemaining = minuteEntry + secondsAsFracMin;
+    console.log("Setting the time remaining to be: " + timeRemaining);
     clearInterval(countDown);
 }
 
+function restartCountdown(){
+    timeRemaining = timerLength;
+    document.getElementById("countdown-timer").innerHTML = timeRemaining + " min, 0 sec";
+}
 
 function countdownTimer(){
     let now = new Date().getTime();
-    let diff = twoMinFromNow - now;
+    let diff = timeFromNow - now;
     console.log("diff is: " + diff);
     console.log(countDown);
     console.log("in countdown timer");
-    console.log(" 2 min from now is: " + twoMinFromNow);
+    console.log(" Time from now is: " + timeFromNow);
     console.log("Now is: " + now);
     let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = Math.floor((diff % (1000 * 60) / 1000));
 
-    document.getElementById("countdown-timer").innerHTML = minutes + " min, " + seconds + "sec";
+    document.getElementById("countdown-timer").innerHTML = minutes + " min, " + seconds + " sec";
 
     if(diff < 0){
         clearInterval(countDown);
@@ -202,6 +221,9 @@ countdownStart.addEventListener("click", startCountdown);
 
 let countdownStop = document.getElementById("countdown-stop");
 countdownStop.addEventListener("click", endCountdown);
+
+let countdownRestart = document.getElementById("countdown-restart");
+countdownRestart.addEventListener("click", restartCountdown);
 
 // <!-- Display the countdown timer in an element -->
 // <p id="demo"></p>
