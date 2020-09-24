@@ -34,20 +34,21 @@ let diceHolder = [];
 // dice 1
 let dice1 = ['m','u','o','c','i','t'];
 let dice2 = ['a','g','a','e','n','e'];
-let dice3 = ['n','h','n','l','r','z'];
-let dice4 = ['b','o','o','j','a','b'];
-let dice5 = ['p','s','h','a','c','o'];
-let dice6 = ['o','t','w','a','t','o'];
-let dice7 = ['d','r','y','v','l','e'];
-let dice8 = ['e','u','s','e','i','n'];
-let dice9 = ['t','t','r','e','y','l'];
-let dice10 = ['v','e','h','w','r','t'];
-let dice11 = ['h','g','e','w','n','e'];
-let dice12 = ['a','k','p','f','f','s'];
-let dice13 = ['qu','i','m','n','h','u'];
-let dice14 = ['e','i','t','s','o','s'];
-let dice15 = ['d','t','y','t','i','s'];
-let dice16 = ['x','r','d','i','l','e'];
+let dice3 = ['b','o','o','j','a','b'];
+let dice4 = ['p','s','h','a','c','o'];
+let dice5 = ['o','t','w','a','t','o'];
+let dice6 = ['d','r','y','v','l','e'];
+let dice7 = ['e','u','s','e','i','n'];
+let dice8 = ['t','t','r','e','y','l'];
+let dice9 = ['v','e','h','w','r','t'];
+let dice10 = ['h','g','e','w','n','e'];
+let dice11 = ['a','k','p','f','f','s'];
+let dice12 = ['qu','i','m','n','h','u'];
+let dice13 = ['e','i','t','s','o','s'];
+let dice14 = ['d','t','y','t','i','s'];
+let dice15 = ['x','r','d','i','l','e'];
+// The only die without any vowels
+let dice16 = ['n','h','n','l','r','z'];
 
 diceHolder[0] = dice1;
 diceHolder[1] = dice2;
@@ -76,23 +77,71 @@ let letterHolder = {'a':0, 'b':0, 'c':0, 'd':0, 'e':0, 'f':0, 'g':0,
 //Math.floor(Math.random() * diceHolder.length)
 
 let vowels = ['a','e','i','o','u'];
-
+let numVowels = document.getElementById("slider").value;
+let selectedVowels = [];
+let selectedConsanants = [];
 let selectedLetters = [];
 let vowelCounter = 0;
 
 function rollDice(){
     let dieFace = 0;
     let dieLetter = '';
-    selectedLetters = [];
-    // For each of the die, randomly select a face and the corresponding letter to add to the board
-    for(let j = 0; j < diceHolder.length; j++){
-        
-        dieFace = Math.floor(Math.random() * 6);
-        dieLetter = diceHolder[j][dieFace];
-        console.log("For dice: " + j + " the die face is: " + dieFace + " and the die letter is: " + dieLetter);
-        selectedLetters.push(dieLetter);  
-
+    let dieNum = 0;
+    let currDie = [];
+    let isVowel = 0;
+    let isConsanant = 0;
+    selectedVowels = [];
+    selectedConsanants = [];
+    // Deep copy of the nested array from here:
+    // https://dev.to/samanthaming/how-to-deep-clone-an-array-in-javascript-3cig
+    let diceHolderCopy = JSON.parse(JSON.stringify(diceHolder)); 
+    console.log("In rollDice");
+    // Draw for the vowels
+    for(let i = 0; i < numVowels; i++){
+        console.log("In vowel for loop");
+        isVowel = 0;
+        // Randomly draw a die that has vowels (all die except the last one)
+        dieNum = Math.floor(Math.random() * (diceHolderCopy.length - 1));
+        // Pop the dice entry from the array
+        currDie = diceHolderCopy.splice(dieNum, 1);
+        console.log("CurrDie is: " + currDie);
+        while(isVowel === 0){
+            console.log("In vowel while loop");
+            dieFace = Math.floor(Math.random() * 6);
+            //currDie is still a nested array, so need the dual indexing here to get the letter.
+            dieLetter = currDie[0][dieFace];
+            console.log("Curr dieFace is: " + dieFace + " curr dieLetter is: " + dieLetter);
+            if(vowels.includes(dieLetter)){
+                selectedVowels.push(dieLetter);
+                isVowel = 1;
+            }
+        }
     }
+
+    // Draw for the consonants
+    for(let i = 0; i < (16 - numVowels); i++){
+        isConsanant = 0;
+        // Randomly draw any die (including the last one)
+        dieNum = Math.floor(Math.random() * diceHolderCopy.length);
+        // Pop the dice entry from the array
+        currDie = diceHolderCopy.splice(dieNum, 1);
+        while(isConsanant === 0){
+            dieFace = Math.floor(Math.random() * 6);
+            //currDie is still a nested array, so need the dual indexing here to get the letter.
+            dieLetter = currDie[0][dieFace];
+            if(!vowels.includes(dieLetter)){
+                selectedConsanants.push(dieLetter);
+                isConsanant = 1;
+            }
+        }
+    }
+
+    console.log("The selected vowels are: " + selectedVowels);
+    console.log("The selected consonants are: " + selectedConsanants);
+    // Concatenate the two arrays together, resulting in another array.
+    selectedLetters = selectedVowels.concat(selectedConsanants);
+    console.log("The selected letters are: " + selectedLetters);
+
 }
 
 // Fisher-Yates shuffling algorithm from here:
@@ -238,7 +287,6 @@ function updateSlider(){
     makeGame();
 }
     
-
 //document.getElementById("num-vowel").innerHTML = 
 let slider = document.getElementById("slider")
 slider.addEventListener("change", updateSlider);
