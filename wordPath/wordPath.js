@@ -75,8 +75,10 @@ let letterHolder = {'a':0, 'b':0, 'c':0, 'd':0, 'e':0, 'f':0, 'g':0,
 
 //Math.floor(Math.random() * diceHolder.length)
 
+let vowels = ['a','e','i','o','u'];
 
 let selectedLetters = [];
+let vowelCounter = 0;
 
 function rollDice(){
     let dieFace = 0;
@@ -228,6 +230,19 @@ countdownStop.addEventListener("click", endCountdown);
 
 let countdownRestart = document.getElementById("countdown-restart");
 countdownRestart.addEventListener("click", restartCountdown);
+
+function updateSlider(){
+    numVowels = document.getElementById("slider").value;
+    console.log("Number of vowels to include is: " + numVowels);
+    document.getElementById("num-vowel").innerHTML = numVowels;
+    makeGame();
+}
+    
+
+//document.getElementById("num-vowel").innerHTML = 
+let slider = document.getElementById("slider")
+slider.addEventListener("change", updateSlider);
+
 
 // <!-- Display the countdown timer in an element -->
 // <p id="demo"></p>
