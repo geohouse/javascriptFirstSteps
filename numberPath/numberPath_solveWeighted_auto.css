@@ -23,8 +23,8 @@ td{
     text-align:center;
     /* If change the font size here, need to change the amount of padding below to compensate to make the cells
     consistently the same sizes whether they have an entry or not */
-    font-size:20px;
-    padding: 3px;
+    font-size:18px;
+    padding: 1px;
     
     
 }
